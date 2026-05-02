@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ConnectRide — Driver</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0a0e1a;
+    --surface: #111827;
+    --surface2: #1a2235;
+    --border: #1e2d45;
+    --accent: #00e5a0;
+    --accent2: #0099ff;
+    --warn: #ff6b35;
+    --danger: #ff3366;
+    --text: #e8edf5;
+    --muted: #6b7fa3;
+  }
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(0,229,160,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,229,160,0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .app { position: relative; z-index: 1; max-width: 480px; margin: 0 auto; padding: 20px; }
+
+  /* Header */
+  header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 20px;
+  }
+  .user-info { display: flex; align-items: center; gap: 10px; }
+  .user-avatar {
+    width: 40px; height: 40px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--warn), var(--accent2));
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px; border: 2px solid var(--accent);
+  }
+  .user-name { font-size: 14px; font-weight: 700; }
+  .user-role { font-size: 10px; color: var(--muted); text-transform: uppercase; }
+  .logout-btn {
+    font-size: 11px; color: var(--muted);
+    background: none; border: 1px solid var(--border);
+    padding: 6px 12px; border-radius: 8px;
+    cursor: pointer; font-family: 'Syne', sans-serif;
+    transition: all 0.2s;
+  }
+  .logout-btn:hover { color: var(--danger); border-color: var(--danger); }
+
+  /* Panel */
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .panel-header {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    font-size: 12px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px; color: var(--muted);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  /* Online toggle */
+  .online-toggle {
+    padding: 20px;
+    text-align: center;
+  }
+  .toggle-btn {
+    width: 100%; padding: 16px;
+    border: none; border-radius: 14px;
+    font-family: 'Syne', sans-serif;
+    font-size: 16px; font-weight: 800;
+    text-transform: uppercase; letter-spacing: 1px;
+    cursor: pointer; transition: all 0.3s;
+  }
+  .toggle-btn.offline {
+    background: var(--surface2);
+    border: 2px solid var(--border);
+    color: var(--muted);
+  }
+  .toggle-btn.online {
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    color: #0a0e1a;
+    box-shadow: 0 0 30px rgba(0,229,160,0.3);
+    animation: online-pulse 3s ease-in-out infinite;
+  }
+  @keyframes online-pulse {
+    0%,100% { box-shadow: 0 0 30px rgba(0,229,160,0.3); }
+    50% { box-shadow: 0 0 50px rgba(0,229,160,0.5); }
+  }
+  .toggle-status {
+    margin-top: 10px;
+    font-size: 12px; color: var(--muted);
+    font-family: 'Space Mono', monospace;
+  }
+
+  /* Network score card */
+  .score-card {
+    padding: 20px;
+    text-align: center;
+  }
+  .score-circle {
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    background: conic-gradient(var(--accent) 0deg, var(--accent) 324deg, var(--border) 324deg);
+    display: flex; align-items: center; justify-content: center;
+    margin: 0 auto 12px;
+    position: relative;
+  }
+  .score-inner {
+    width: 76px; height: 76px;
+    border-radius: 50%;
+    background: var(--surface);
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+  }
+  .score-val {
+    font-family: 'Space Mono', monospace;
+    font-size: 22px; font-weight: 700; color: var(--accent);
+    line-height: 1;
+  }
+  .score-lbl { font-size: 9px; color: var(--muted); text-transform: uppercase; }
+  .score-title { font-size: 14px; font-weight: 700; margin-bottom: 4px; }
+  .score-sub { font-size: 11px; color: var(--muted); }
+
+  /* Network checks */
+  .network-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 10px; padding: 16px;
+  }
+  .network-item {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 12px;
+    text-align: center;
+    transition: all 0.3s;
+  }
+  .network-item.pass {
+    background: rgba(0,229,160,0.06);
+    border-color: rgba(0,229,160,0.3);
+  }
+  .network-item.fail {
+    background: rgba(255,51,102,0.06);
+    border-color: rgba(255,51,102,0.3);
+  }
+  .network-icon { font-size: 24px; margin-bottom: 6px; }
+  .network-name { font-size: 11px; font-weight: 700; margin-bottom: 4px; }
+  .network-status {
+    font-size: 10px; font-family: 'Space Mono', monospace;
+  }
+  .network-status.pass { color: var(--accent); }
+  .network-status.fail { color: var(--danger); }
+  .network-status.pending { color: var(--muted); }
+
+  /* Operator badge */
+  .operator-badge {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+  .operator-info { display: flex; align-items: center; gap: 10px; }
+  .operator-logo {
+    width: 36px; height: 36px; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px; font-weight: 800;
+  }
+  .mtn-logo { background: #ffcc00; color: #000; font-size: 12px; }
+  .airtel-logo { background: #ff0000; color: #fff; font-size: 12px; }
+  .operator-name { font-size: 13px; font-weight: 700; }
+  .operator-network { font-size: 11px; color: var(--muted); }
+  .signal-bars { display: flex; align-items: flex-end; gap: 2px; }
+  .bar {
+    width: 5px; border-radius: 2px;
+    background: var(--border);
+    transition: all 0.3s;
+  }
+  .bar.active { background: var(--accent); }
+  .bar:nth-child(1) { height: 6px; }
+  .bar:nth-child(2) { height: 10px; }
+  .bar:nth-child(3) { height: 14px; }
+  .bar:nth-child(4) { height: 18px; }
+
+  /* Incoming ride */
+  .incoming-ride {
+    padding: 16px 20px;
+    display: none;
+  }
+  .incoming-ride.show { display: block; }
+  .ride-alert {
+    background: rgba(0,153,255,0.08);
+    border: 1px solid rgba(0,153,255,0.3);
+    border-radius: 12px;
+    padding: 16px;
+    animation: alert-pulse 2s infinite;
+  }
+  @keyframes alert-pulse {
+    0%,100% { border-color: rgba(0,153,255,0.3); }
+    50% { border-color: rgba(0,153,255,0.8); }
+  }
+  .ride-alert-title {
+    font-size: 14px; font-weight: 800;
+    color: var(--accent2); margin-bottom: 10px;
+  }
+  .ride-route-info {
+    display: flex; flex-direction: column; gap: 6px;
+    margin-bottom: 14px;
+  }
+  .route-point { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+  .route-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .pickup-dot { background: var(--accent); }
+  .dropoff-dot { background: var(--accent2); }
+  .ride-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .accept-btn {
+    padding: 12px;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border: none; border-radius: 10px;
+    color: #0a0e1a; font-family: 'Syne', sans-serif;
+    font-size: 13px; font-weight: 800;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .reject-btn {
+    padding: 12px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--muted); font-family: 'Syne', sans-serif;
+    font-size: 13px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .reject-btn:hover { border-color: var(--danger); color: var(--danger); }
+
+  /* Stats */
+  .stats-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 10px; padding: 16px;
+  }
+  .stat-item {
+    background: var(--surface2);
+    border-radius: 10px; padding: 12px;
+    text-align: center;
+  }
+  .stat-val {
+    font-family: 'Space Mono', monospace;
+    font-size: 20px; font-weight: 700; color: var(--accent);
+  }
+  .stat-lbl { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+  /* Earnings */
+  .earnings-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 20px; border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .earnings-label { color: var(--muted); }
+  .earnings-val { font-family: 'Space Mono', monospace; font-weight: 700; color: var(--accent); }
+
+  /* Zone indicator */
+  .zone-indicator {
+    padding: 14px 20px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .zone-name { font-size: 14px; font-weight: 700; }
+  .zone-coverage {
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 11px; font-weight: 700;
+    font-family: 'Space Mono', monospace;
+  }
+  .zone-high { background: rgba(0,229,160,0.15); color: var(--accent); }
+  .zone-medium { background: rgba(255,107,53,0.15); color: var(--warn); }
+  .zone-low { background: rgba(255,51,102,0.15); color: var(--danger); }
+
+  /* Run check btn */
+  .run-check-btn {
+    width: calc(100% - 32px);
+    margin: 0 16px 16px;
+    padding: 12px;
+    background: var(--surface2);
+    border: 1px solid var(--accent);
+    border-radius: 10px;
+    color: var(--accent);
+    font-family: 'Syne', sans-serif;
+    font-size: 13px; font-weight: 700;
+    cursor: pointer; transition: all 0.2s;
+  }
+  .run-check-btn:hover {
+    background: rgba(0,229,160,0.1);
+  }
+
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Header -->
+  <header>
+    <div class="user-info">
+      <div class="user-avatar">🧑🏾</div>
+      <div>
+        <div class="user-name" id="user-name">Jean-Paul M.</div>
+        <div class="user-role">Driver • Kicukiro 🇷🇼</div>
+      </div>
+    </div>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </header>
+
+  <!-- Online Toggle -->
+  <div class="panel">
+    <div class="panel-header">
+      <span>🟢 Driver Status</span>
+      <span id="status-label" style="color:var(--muted);font-size:10px;font-family:'Space Mono',monospace;">OFFLINE</span>
+    </div>
+    <div class="online-toggle">
+      <button class="toggle-btn offline" id="toggle-btn" onclick="toggleOnline()">
+        🔴 Go Online
+      </button>
+      <div class="toggle-status" id="toggle-status">You are offline — tap to start receiving rides</div>
+    </div>
+  </div>
+
+  <!-- Network Score -->
+  <div class="panel">
+    <div class="panel-header">
+      <span>📊 My Network Score</span>
+      <span style="color:var(--accent);font-size:10px;font-family:'Space Mono',monospace;" id="score-label">RUN CHECK</span>
+    </div>
+    <div class="score-card">
+      <div class="score-circle" id="score-circle">
+        <div class="score-inner">
+          <div class="score-val" id="score-val">—</div>
+          <div class="score-lbl">Score</div>
+        </div>
+      </div>
+      <div class="score-title" id="score-title">Run a network check</div>
+      <div class="score-sub" id="score-sub">Tap below to check your dispatch readiness</div>
+    </div>
+
+    <!-- Operator -->
+    <div class="operator-badge">
+      <div class="operator-info">
+        <div class="operator-logo mtn-logo" id="operator-logo">MTN</div>
+        <div>
+          <div class="operator-name" id="operator-name">MTN Rwanda</div>
+          <div class="operator-network" id="operator-network">4G LTE • Kicukiro</div>
+        </div>
+      </div>
+      <div class="signal-bars" id="signal-bars">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </div>
+    </div>
+
+    <!-- Zone -->
+    <div class="zone-indicator">
+      <div>
+        <div class="zone-name" id="zone-name">📍 Kicukiro, Kigali</div>
+        <div style="font-size:11px;color:var(--muted);">Current zone</div>
+      </div>
+      <div class="zone-coverage zone-high" id="zone-badge">HIGH COVERAGE</div>
+    </div>
+
+    <!-- Network checks grid -->
+    <div class="network-grid" id="network-grid">
+      <div class="network-item" id="ni-loc">
+        <div class="network-icon">📍</div>
+        <div class="network-name">Location</div>
+        <div class="network-status pending">Not checked</div>
+      </div>
+      <div class="network-item" id="ni-dev">
+        <div class="network-icon">📶</div>
+        <div class="network-name">Network</div>
+        <div class="network-status pending">Not checked</div>
+      </div>
+      <div class="network-item" id="ni-qos">
+        <div class="network-icon">🚀</div>
+        <div class="network-name">QoS Boost</div>
+        <div class="network-status pending">Not checked</div>
+      </div>
+      <div class="network-item" id="ni-sim">
+        <div class="network-icon">🔐</div>
+        <div class="network-name">SIM Secure</div>
+        <div class="network-status pending">Not checked</div>
+      </div>
+    </div>
+
+    <button class="run-check-btn" onclick="runNetworkCheck()">
+      ⚡ Run Network Check Now
+    </button>
+  </div>
+
+  <!-- Incoming Ride -->
+  <div class="panel">
+    <div class="panel-header">
+      <span>🔔 Incoming Ride</span>
+      <span id="ride-badge" style="font-size:10px;color:var(--muted);font-family:'Space Mono',monospace;">WAITING</span>
+    </div>
+    <div class="incoming-ride" id="incoming-ride">
+      <div class="ride-alert">
+        <div class="ride-alert-title">🔔 New Ride Request!</div>
+        <div class="ride-route-info">
+          <div class="route-point">
+            <div class="route-dot pickup-dot"></div>
+            <span id="pickup-loc">Kimironko Market</span>
+          </div>
+          <div class="route-point">
+            <div class="route-dot dropoff-dot"></div>
+            <span id="dropoff-loc">Kigali Convention Centre</span>
+          </div>
+        </div>
+        <div style="display:flex;gap:16px;font-size:11px;color:var(--muted);font-family:'Space Mono',monospace;margin-bottom:14px;">
+          <span>4.2 km</span><span>~14 min</span><span>RWF 2,800</span>
+        </div>
+        <div class="ride-actions">
+          <button class="accept-btn" onclick="acceptRide()">✅ Accept</button>
+          <button class="reject-btn" onclick="rejectRide()">❌ Reject</button>
+        </div>
+      </div>
+    </div>
+    <div style="padding:20px;text-align:center;color:var(--muted);font-size:12px;" id="no-ride">
+      Go online to start receiving ride requests 🛵
+    </div>
+  </div>
+
+  <!-- Today's Stats -->
+  <div class="panel">
+    <div class="panel-header">
+      <span>📈 Today's Performance</span>
+      <span style="color:var(--accent2);font-size:10px;">MAY 2, 2026</span>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-item">
+        <div class="stat-val" id="stat-trips">7</div>
+        <div class="stat-lbl">Trips</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val" id="stat-score-today">94</div>
+        <div class="stat-lbl">Avg Score</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-val">0</div>
+        <div class="stat-lbl">Failed</div>
+      </div>
+    </div>
+
+    <!-- Earnings -->
+    <div class="earnings-row">
+      <span class="earnings-label">Today's Earnings</span>
+      <span class="earnings-val">RWF 19,600</span>
+    </div>
+    <div class="earnings-row">
+      <span class="earnings-label">This Week</span>
+      <span class="earnings-val">RWF 87,400</span>
+    </div>
+    <div class="earnings-row" style="border-bottom:none;">
+      <span class="earnings-label">Network Reliability</span>
+      <span class="earnings-val" style="color:var(--accent);">100% ✅</span>
+    </div>
+  </div>
+
+  <!-- Bottom nav -->
+  <div style="display:flex;gap:8px;margin-top:8px;">
+    <a href="index.html" style="flex:1;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:10px;text-align:center;color:var(--muted);text-decoration:none;font-size:12px;font-weight:700;">
+      📊 Operator View
+    </a>
+    <a href="passenger.html" style="flex:1;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:10px;text-align:center;color:var(--muted);text-decoration:none;font-size:12px;font-weight:700;">
+      👤 Passenger View
+    </a>
+  </div>
+
+</div>
+
+<script>
+  let isOnline = false;
+  let checksDone = false;
+
+  // Load user
+  const user = JSON.parse(localStorage.getItem('cr_user') || '{"name":"Jean-Paul M."}');
+  document.getElementById('user-name').textContent = user.name;
+
+  function toggleOnline() {
+    isOnline = !isOnline;
+    const btn = document.getElementById('toggle-btn');
+    const statusLabel = document.getElementById('status-label');
+    const toggleStatus = document.getElementById('toggle-status');
+
+    if (isOnline) {
+      btn.className = 'toggle-btn online';
+      btn.textContent = '🟢 Online — Ready for Rides';
+      statusLabel.textContent = 'ONLINE';
+      statusLabel.style.color = 'var(--accent)';
+      toggleStatus.textContent = 'You are online — ConnectRide is monitoring your network';
+
+      // Show incoming ride after 3 seconds
+      setTimeout(() => {
+        if (isOnline && checksDone) showIncomingRide();
+      }, 3000);
+
+      // Auto run check
+      if (!checksDone) runNetworkCheck();
+    } else {
+      btn.className = 'toggle-btn offline';
+      btn.textContent = '🔴 Go Online';
+      statusLabel.textContent = 'OFFLINE';
+      statusLabel.style.color = 'var(--muted)';
+      toggleStatus.textContent = 'You are offline — tap to start receiving rides';
+      hideIncomingRide();
+    }
+  }
+
+  function updateNetworkItem(id, status, text) {
+    const el = document.getElementById(id);
+    el.className = `network-item ${status}`;
+    el.querySelector('.network-status').className = `network-status ${status}`;
+    el.querySelector('.network-status').textContent = text;
+  }
+
+  async function runNetworkCheck() {
+    document.getElementById('score-label').textContent = 'CHECKING...';
+    document.getElementById('score-val').textContent = '...';
+    document.getElementById('score-title').textContent = 'Running CAMARA API checks...';
+
+    // Animate signal bars
+    const bars = document.querySelectorAll('.bar');
+    bars.forEach((b, i) => {
+      setTimeout(() => b.classList.add('active'), i * 200);
+    });
+
+    await sleep(800);
+    updateNetworkItem('ni-loc', 'pass', '✅ Verified ±3m');
+    await sleep(600);
+    updateNetworkItem('ni-dev', 'pass', '✅ HIGH signal');
+    await sleep(600);
+    updateNetworkItem('ni-qos', 'pass', '✅ 10Mbps boosted');
+    await sleep(600);
+    updateNetworkItem('ni-sim', 'pass', '✅ No swap detected');
+
+    await sleep(300);
+
+    // Update score
+    const score = 94 + Math.floor(Math.random() * 7);
+    document.getElementById('score-val').textContent = score;
+    document.getElementById('score-label').textContent = `${score}/100`;
+    document.getElementById('score-title').textContent = '🎉 You are dispatch-ready!';
+    document.getElementById('score-sub').textContent = 'All 4 Nokia NaC CAMARA checks passed';
+
+    // Update score circle
+    const deg = (score / 100) * 360;
+    document.getElementById('score-circle').style.background =
+      `conic-gradient(var(--accent) 0deg, var(--accent) ${deg}deg, var(--border) ${deg}deg)`;
+
+    checksDone = true;
+
+    if (isOnline) {
+      setTimeout(() => showIncomingRide(), 2000);
+    }
+  }
+
+  function showIncomingRide() {
+    document.getElementById('incoming-ride').classList.add('show');
+    document.getElementById('no-ride').style.display = 'none';
+    document.getElementById('ride-badge').textContent = 'NEW REQUEST';
+    document.getElementById('ride-badge').style.color = 'var(--accent2)';
+  }
+
+  function hideIncomingRide() {
+    document.getElementById('incoming-ride').classList.remove('show');
+    document.getElementById('no-ride').style.display = 'block';
+    document.getElementById('ride-badge').textContent = 'WAITING';
+    document.getElementById('ride-badge').style.color = 'var(--muted)';
+  }
+
+  function acceptRide() {
+    hideIncomingRide();
+    document.getElementById('stat-trips').textContent = parseInt(document.getElementById('stat-trips').textContent) + 1;
+    alert('✅ Ride accepted! Navigate to Kimironko Market to pick up your passenger.');
+  }
+
+  function rejectRide() {
+    hideIncomingRide();
+    alert('❌ Ride rejected. ConnectRide will assign next available driver.');
+  }
+
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  function logout() {
+    localStorage.removeItem('cr_user');
+    window.location.href = 'login.html';
+  }
+</script>
+</body>
+</html>
