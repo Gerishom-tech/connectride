@@ -269,9 +269,10 @@
         <div class="stat-lbl">Trips Today</div>
       </div>
     </div>
-    <div>
+    <div style="display:flex;align-items:center;gap:12px;">
       <span class="status-dot"></span>
       <span class="live-badge">CONNECTRIDE API • LIVE</span>
+      <button onclick="logout()" style="font-size:11px;color:var(--muted);background:none;border:1px solid var(--border);padding:6px 12px;border-radius:8px;cursor:pointer;font-family:'Syne',sans-serif;">Logout</button>
     </div>
   </header>
 
@@ -459,7 +460,7 @@
 </div>
 
 <script>
- const API_BASE = '/api';
+  const API_BASE = 'http://localhost:3000/api';
   let allDrivers = [];
   let selectedDriver = null;
   let dispatching = false;
@@ -710,6 +711,11 @@
   }
 
   loadDrivers();
+
+  function logout() {
+    localStorage.removeItem('cr_user');
+    window.location.href = 'login.html';
+  }
 </script>
 </body>
 </html>

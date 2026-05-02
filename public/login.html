@@ -6,375 +6,85 @@
 <title>ConnectRide — Login</title>
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap');
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
   :root {
-    --bg: #0a0e1a;
-    --surface: #111827;
-    --border: #1e2d45;
-    --accent: #00e5a0;
-    --accent2: #0099ff;
-    --warn: #ff6b35;
-    --text: #e8edf5;
-    --muted: #6b7fa3;
+    --bg: #0a0e1a; --surface: #111827; --border: #1e2d45;
+    --accent: #00e5a0; --accent2: #0099ff; --warn: #ff6b35;
+    --text: #e8edf5; --muted: #6b7fa3;
   }
-
   body {
-    font-family: 'Syne', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    overflow-y: auto;
+    font-family: 'Syne', sans-serif; background: var(--bg); color: var(--text);
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; overflow-y: auto;
   }
-
-  /* Animated background */
   body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(0,229,160,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,229,160,0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 0;
+    content: ''; position: fixed; inset: 0;
+    background-image: linear-gradient(rgba(0,229,160,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,160,0.03) 1px, transparent 1px);
+    background-size: 40px 40px; pointer-events: none; z-index: 0;
   }
-
-  /* Glowing orbs */
-  .orb {
-    position: fixed;
-    border-radius: 50%;
-    filter: blur(80px);
-    pointer-events: none;
-    z-index: 0;
-    animation: float 8s ease-in-out infinite;
-  }
+  .orb { position: fixed; border-radius: 50%; filter: blur(80px); pointer-events: none; z-index: 0; animation: float 8s ease-in-out infinite; }
   .orb1 { width: 400px; height: 400px; background: rgba(0,229,160,0.08); top: -100px; left: -100px; }
   .orb2 { width: 300px; height: 300px; background: rgba(0,153,255,0.08); bottom: -50px; right: -50px; animation-delay: -4s; }
-  .orb3 { width: 200px; height: 200px; background: rgba(255,107,53,0.06); top: 50%; left: 50%; animation-delay: -2s; }
-
-  @keyframes float {
-    0%, 100% { transform: translateY(0px) scale(1); }
-    50% { transform: translateY(-30px) scale(1.05); }
-  }
-
-  .container {
-    position: relative;
-    z-index: 1;
-    width: 100%;
-    max-width: 480px;
-    padding: 20px;
-  }
-
-  /* Logo section */
-  .logo-section {
-    text-align: center;
-    margin-bottom: 40px;
-    animation: fadeInDown 0.8s ease;
-  }
-
-  @keyframes fadeInDown {
-    from { opacity: 0; transform: translateY(-30px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-30px)} }
+  .container { position: relative; z-index: 1; width: 100%; max-width: 480px; padding: 20px 20px 80px; }
+  .logo-section { text-align: center; margin-bottom: 32px; animation: fadeInDown 0.8s ease; }
+  @keyframes fadeInDown { from{opacity:0;transform:translateY(-30px)} to{opacity:1;transform:translateY(0)} }
   .logo-icon-big {
-    width: 80px; height: 80px;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    border-radius: 20px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 40px;
-    margin: 0 auto 16px;
-    box-shadow: 0 0 40px rgba(0,229,160,0.3);
-    animation: glow 3s ease-in-out infinite;
+    width: 80px; height: 80px; background: linear-gradient(135deg, var(--accent), var(--accent2));
+    border-radius: 20px; display: flex; align-items: center; justify-content: center;
+    font-size: 40px; margin: 0 auto 16px; animation: glow 3s ease-in-out infinite;
   }
-
-  @keyframes glow {
-    0%, 100% { box-shadow: 0 0 40px rgba(0,229,160,0.3); }
-    50% { box-shadow: 0 0 60px rgba(0,229,160,0.5); }
-  }
-
-  .logo-name {
-    font-size: 36px;
-    font-weight: 800;
-    letter-spacing: -1px;
-    margin-bottom: 6px;
-  }
+  @keyframes glow { 0%,100%{box-shadow:0 0 40px rgba(0,229,160,0.3)} 50%{box-shadow:0 0 60px rgba(0,229,160,0.5)} }
+  .logo-name { font-size: 36px; font-weight: 800; letter-spacing: -1px; margin-bottom: 6px; }
   .logo-name span { color: var(--accent); }
-  .logo-tagline {
-    font-size: 13px;
-    color: var(--muted);
-    letter-spacing: 1px;
-    text-transform: uppercase;
-  }
-
-  /* Stats row */
-  .stats-row {
-    display: flex;
-    justify-content: center;
-    gap: 24px;
-    margin-bottom: 32px;
-    animation: fadeIn 1s ease 0.3s both;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-
-  .mini-stat {
-    text-align: center;
-    padding: 10px 16px;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-  }
+  .logo-tagline { font-size: 13px; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+  .stats-row { display: flex; justify-content: center; gap: 24px; margin-bottom: 32px; }
+  .mini-stat { text-align: center; padding: 10px 16px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; }
   .mini-stat-val { font-family: 'Space Mono', monospace; font-size: 18px; font-weight: 700; color: var(--accent); }
-  .mini-stat-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
-
-  /* Login card */
-  .login-card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    padding: 32px;
-    animation: fadeInUp 0.8s ease 0.2s both;
-  }
-
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(30px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
-  .login-title {
-    font-size: 20px;
-    font-weight: 800;
-    margin-bottom: 6px;
-  }
-  .login-subtitle {
-    font-size: 12px;
-    color: var(--muted);
-    margin-bottom: 24px;
-  }
-
-  /* Role selector */
-  .role-selector {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-    gap: 8px;
-    margin-bottom: 24px;
-  }
-
-  .role-btn {
-    padding: 12px 8px;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    color: var(--muted);
-    font-family: 'Syne', sans-serif;
-    font-size: 12px;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.2s;
-    text-align: center;
-  }
-
+  .mini-stat-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; }
+  .login-card { background: var(--surface); border: 1px solid var(--border); border-radius: 20px; padding: 32px; margin-bottom: 16px; }
+  .login-title { font-size: 20px; font-weight: 800; margin-bottom: 6px; }
+  .login-subtitle { font-size: 12px; color: var(--muted); margin-bottom: 24px; }
+  .role-selector { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 24px; }
+  .role-btn { padding: 12px 8px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; color: var(--muted); font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700; cursor: pointer; transition: all 0.2s; text-align: center; }
   .role-btn:hover { border-color: var(--accent); color: var(--text); }
-  .role-btn.active {
-    background: rgba(0,229,160,0.1);
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-
+  .role-btn.active { background: rgba(0,229,160,0.1); border-color: var(--accent); color: var(--accent); }
   .role-icon { font-size: 24px; display: block; margin-bottom: 4px; }
-
-  /* Form */
   .form-group { margin-bottom: 16px; }
-  .form-label {
-    font-size: 11px;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 6px;
-    display: block;
-  }
-  .form-input {
-    width: 100%;
-    padding: 12px 16px;
-    background: rgba(255,255,255,0.03);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    color: var(--text);
-    font-family: 'Syne', sans-serif;
-    font-size: 14px;
-    outline: none;
-    transition: all 0.2s;
-  }
-  .form-input:focus {
-    border-color: var(--accent);
-    background: rgba(0,229,160,0.05);
-  }
-
-  /* Login button */
-  .login-btn {
-    width: 100%;
-    padding: 14px;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    border: none;
-    border-radius: 12px;
-    color: #0a0e1a;
-    font-family: 'Syne', sans-serif;
-    font-size: 15px;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-top: 8px;
-  }
-  .login-btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(0,229,160,0.4);
-  }
-
-  /* Demo accounts */
-  .demo-section {
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid var(--border);
-  }
-  .demo-title {
-    font-size: 11px;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    margin-bottom: 12px;
-    text-align: center;
-  }
-  .demo-accounts {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-  }
-  .demo-account {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 10px 14px;
-    background: rgba(255,255,255,0.02);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.2s;
-  }
-  .demo-account:hover {
-    border-color: var(--accent);
-    background: rgba(0,229,160,0.05);
-  }
+  .form-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; display: block; }
+  .form-input { width: 100%; padding: 12px 16px; background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: 'Syne', sans-serif; font-size: 14px; outline: none; transition: all 0.2s; }
+  .form-input:focus { border-color: var(--accent); background: rgba(0,229,160,0.05); }
+  .login-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border: none; border-radius: 12px; color: #0a0e1a; font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: all 0.2s; margin-top: 8px; }
+  .login-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,229,160,0.4); }
+  .demo-section { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); }
+  .demo-title { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; text-align: center; }
+  .demo-accounts { display: flex; flex-direction: column; gap: 8px; }
+  .demo-account { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.2s; }
+  .demo-account:hover { border-color: var(--accent); background: rgba(0,229,160,0.05); }
   .demo-account-info { display: flex; align-items: center; gap: 10px; }
   .demo-account-emoji { font-size: 20px; }
   .demo-account-name { font-size: 13px; font-weight: 700; }
-  .demo-account-role {
-    font-size: 10px;
-    color: var(--muted);
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-  .demo-use-btn {
-    font-size: 11px;
-    color: var(--accent);
-    font-family: 'Space Mono', monospace;
-    background: none;
-    border: none;
-    cursor: pointer;
-  }
-
-  /* Bottom links */
-  .bottom-links {
-    text-align: center;
-    margin-top: 20px;
-    font-size: 12px;
-    color: var(--muted);
-    animation: fadeIn 1s ease 0.5s both;
-  }
+  .demo-account-role { font-size: 10px; color: var(--muted); text-transform: uppercase; }
+  .demo-use-btn { font-size: 11px; color: var(--accent); font-family: 'Space Mono', monospace; background: none; border: none; cursor: pointer; }
+  .bottom-links { text-align: center; margin-top: 16px; font-size: 12px; color: var(--muted); }
   .bottom-links a { color: var(--accent); text-decoration: none; }
-
-  /* Live indicator */
-  .live-indicator {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 14px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    font-size: 11px;
-    font-family: 'Space Mono', monospace;
-    color: var(--accent);
-    z-index: 10;
-  }
-  .live-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 6px var(--accent);
-    animation: pulse 2s infinite;
-  }
+  .live-indicator { position: fixed; top: 20px; right: 20px; display: flex; align-items: center; gap: 8px; padding: 8px 14px; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; font-size: 11px; font-family: 'Space Mono', monospace; color: var(--accent); z-index: 10; }
+  .live-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 6px var(--accent); animation: pulse 2s infinite; }
   @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
-
-  /* Cities ticker */
-  .cities-ticker {
-    position: fixed;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 8px 20px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 20px;
-    font-size: 11px;
-    font-family: 'Space Mono', monospace;
-    color: var(--muted);
-    z-index: 10;
-    white-space: nowrap;
-  }
+  .cities-ticker { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 12px; padding: 8px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 20px; font-size: 11px; font-family: 'Space Mono', monospace; color: var(--muted); z-index: 10; white-space: nowrap; }
   .city-tag { color: var(--accent); }
-
-  .error-msg {
-    color: #ff3366;
-    font-size: 12px;
-    margin-top: 8px;
-    display: none;
-    text-align: center;
-  }
+  .error-msg { color: #ff3366; font-size: 12px; margin-top: 8px; display: none; text-align: center; }
   .error-msg.show { display: block; }
+  .success-msg { color: var(--accent); font-size: 12px; margin-top: 8px; display: none; text-align: center; }
+  .success-msg.show { display: block; }
+  .divider { display: flex; align-items: center; gap: 12px; margin: 16px 0; color: var(--muted); font-size: 12px; }
+  .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 </style>
 </head>
 <body>
-
-<!-- Background orbs -->
 <div class="orb orb1"></div>
 <div class="orb orb2"></div>
-<div class="orb orb3"></div>
-
-<!-- Live indicator -->
-<div class="live-indicator">
-  <div class="live-dot"></div>
-  NOKIA NaC • LIVE
-</div>
-
-<!-- Cities ticker -->
+<div class="live-indicator"><div class="live-dot"></div>NOKIA NaC • LIVE</div>
 <div class="cities-ticker">
   🌍 Serving:
   <span class="city-tag">Kigali 🇷🇼</span> •
@@ -386,52 +96,27 @@
 </div>
 
 <div class="container">
-
-  <!-- Logo -->
   <div class="logo-section">
     <div class="logo-icon-big">🛵</div>
     <div class="logo-name">Connect<span>Ride</span></div>
     <div class="logo-tagline">Smarter Rides Through Network Intelligence</div>
   </div>
 
-  <!-- Stats -->
   <div class="stats-row">
-    <div class="mini-stat">
-      <div class="mini-stat-val">4</div>
-      <div class="mini-stat-lbl">CAMARA APIs</div>
-    </div>
-    <div class="mini-stat">
-      <div class="mini-stat-val">6</div>
-      <div class="mini-stat-lbl">Cities</div>
-    </div>
-    <div class="mini-stat">
-      <div class="mini-stat-val">100%</div>
-      <div class="mini-stat-lbl">Reliable</div>
-    </div>
+    <div class="mini-stat"><div class="mini-stat-val">4</div><div class="mini-stat-lbl">CAMARA APIs</div></div>
+    <div class="mini-stat"><div class="mini-stat-val">6</div><div class="mini-stat-lbl">Cities</div></div>
+    <div class="mini-stat"><div class="mini-stat-val">100%</div><div class="mini-stat-lbl">Reliable</div></div>
   </div>
 
-  <!-- Login Card -->
-  <div class="login-card">
+  <!-- LOGIN CARD -->
+  <div class="login-card" id="login-card">
     <div class="login-title">Welcome Back 👋</div>
     <div class="login-subtitle">Login to your ConnectRide account</div>
-
-    <!-- Role selector -->
     <div class="role-selector">
-      <button class="role-btn" id="role-passenger" onclick="selectRole('passenger')">
-        <span class="role-icon">👤</span>
-        Passenger
-      </button>
-      <button class="role-btn" id="role-driver" onclick="selectRole('driver')">
-        <span class="role-icon">🛵</span>
-        Driver
-      </button>
-      <button class="role-btn active" id="role-operator" onclick="selectRole('operator')">
-        <span class="role-icon">📊</span>
-        Operator
-      </button>
+      <button class="role-btn" id="role-passenger" onclick="selectRole('passenger')"><span class="role-icon">👤</span>Passenger</button>
+      <button class="role-btn" id="role-driver" onclick="selectRole('driver')"><span class="role-icon">🛵</span>Driver</button>
+      <button class="role-btn active" id="role-operator" onclick="selectRole('operator')"><span class="role-icon">📊</span>Operator</button>
     </div>
-
-    <!-- Form -->
     <div class="form-group">
       <label class="form-label">📧 Email Address</label>
       <input class="form-input" id="email" type="email" placeholder="your@email.com"/>
@@ -440,45 +125,21 @@
       <label class="form-label">🔐 Password</label>
       <input class="form-input" id="password" type="password" placeholder="Enter your password"/>
     </div>
-
-    <div class="error-msg" id="error-msg">❌ Invalid credentials. Try demo accounts below.</div>
-
-    <button class="login-btn" onclick="handleLogin()">
-      🚀 Login to ConnectRide
-    </button>
-
-    <!-- Demo accounts -->
+    <div class="error-msg" id="error-msg">❌ Invalid credentials.</div>
+    <button class="login-btn" onclick="handleLogin()">🚀 Login to ConnectRide</button>
     <div class="demo-section">
       <div class="demo-title">Quick Demo Access</div>
       <div class="demo-accounts">
-        <div class="demo-account" onclick="quickLogin('passenger@connectride.com', 'demo123', 'passenger')">
-          <div class="demo-account-info">
-            <span class="demo-account-emoji">👤</span>
-            <div>
-              <div class="demo-account-name">Amina Uwase</div>
-              <div class="demo-account-role">Passenger — Kigali</div>
-            </div>
-          </div>
+        <div class="demo-account" onclick="quickLogin('passenger@connectride.com','demo123','passenger')">
+          <div class="demo-account-info"><span class="demo-account-emoji">👤</span><div><div class="demo-account-name">Amina Uwase</div><div class="demo-account-role">Passenger — Kigali</div></div></div>
           <button class="demo-use-btn">USE →</button>
         </div>
-        <div class="demo-account" onclick="quickLogin('driver@connectride.com', 'demo123', 'driver')">
-          <div class="demo-account-info">
-            <span class="demo-account-emoji">🛵</span>
-            <div>
-              <div class="demo-account-name">Jean-Paul M.</div>
-              <div class="demo-account-role">Driver — Kicukiro • MTN</div>
-            </div>
-          </div>
+        <div class="demo-account" onclick="quickLogin('driver@connectride.com','demo123','driver')">
+          <div class="demo-account-info"><span class="demo-account-emoji">🛵</span><div><div class="demo-account-name">Jean-Paul M.</div><div class="demo-account-role">Driver — Kicukiro • MTN</div></div></div>
           <button class="demo-use-btn">USE →</button>
         </div>
-        <div class="demo-account" onclick="quickLogin('operator@connectride.com', 'demo123', 'operator')">
-          <div class="demo-account-info">
-            <span class="demo-account-emoji">📊</span>
-            <div>
-              <div class="demo-account-name">Gerishom</div>
-              <div class="demo-account-role">Operator — ConnectRide</div>
-            </div>
-          </div>
+        <div class="demo-account" onclick="quickLogin('operator@connectride.com','demo123','operator')">
+          <div class="demo-account-info"><span class="demo-account-emoji">📊</span><div><div class="demo-account-name">Gerishom</div><div class="demo-account-role">Operator — ConnectRide</div></div></div>
           <button class="demo-use-btn">USE →</button>
         </div>
       </div>
@@ -490,63 +151,72 @@
     <p style="margin-top:6px">Built for <a href="#">Africa Ignite Hackathon 2026</a> 🏆</p>
   </div>
 
-  <!-- Register form (hidden by default) -->
-  <div id="register-section" style="display:none;margin-top:16px;">
-    <div class="login-card">
-      <div class="login-title">Create Account 🚀</div>
-      <div class="login-subtitle">Join ConnectRide today</div>
-      <div class="role-selector">
-        <button class="role-btn" id="reg-role-passenger" onclick="selectRegRole('passenger')">
-          <span class="role-icon">👤</span>Passenger
-        </button>
-        <button class="role-btn" id="reg-role-driver" onclick="selectRegRole('driver')">
-          <span class="role-icon">🛵</span>Driver
-        </button>
-        <button class="role-btn active" id="reg-role-operator" onclick="selectRegRole('operator')">
-          <span class="role-icon">📊</span>Operator
-        </button>
-      </div>
-      <div class="form-group">
-        <label class="form-label">👤 Full Name</label>
-        <input class="form-input" id="reg-name" placeholder="Your full name"/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">📧 Email</label>
-        <input class="form-input" id="reg-email" type="email" placeholder="your@email.com"/>
-      </div>
-      <div class="form-group">
-        <label class="form-label">📍 City</label>
-        <select class="form-input" id="reg-city">
-          <option>Kigali 🇷🇼</option>
-          <option>Nairobi 🇰🇪</option>
-          <option>Lagos 🇳🇬</option>
-          <option>Kampala 🇺🇬</option>
-          <option>Accra 🇬🇭</option>
-          <option>Dar es Salaam 🇹🇿</option>
-        </select>
-      </div>
-      <div class="form-group">
-        <label class="form-label">🔐 Password</label>
-        <input class="form-input" id="reg-password" type="password" placeholder="Create password"/>
-      </div>
-      <button class="login-btn" onclick="handleRegister()">
-        ✅ Create Account
-      </button>
-      <div style="text-align:center;margin-top:12px;">
-        <a href="#" onclick="hideRegister()" style="color:var(--muted);font-size:12px;">Back to Login</a>
-      </div>
+  <!-- REGISTER CARD -->
+  <div class="login-card" id="register-card" style="display:none;margin-top:16px;">
+    <div class="login-title">Create Account 🚀</div>
+    <div class="login-subtitle">Join ConnectRide today — it's free!</div>
+    <div class="role-selector">
+      <button class="role-btn" id="reg-role-passenger" onclick="selectRegRole('passenger')"><span class="role-icon">👤</span>Passenger</button>
+      <button class="role-btn" id="reg-role-driver" onclick="selectRegRole('driver')"><span class="role-icon">🛵</span>Driver</button>
+      <button class="role-btn active" id="reg-role-operator" onclick="selectRegRole('operator')"><span class="role-icon">📊</span>Operator</button>
+    </div>
+    <div class="form-group">
+      <label class="form-label">👤 Full Name</label>
+      <input class="form-input" id="reg-name" placeholder="Your full name"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">📧 Email</label>
+      <input class="form-input" id="reg-email" type="email" placeholder="your@email.com"/>
+    </div>
+    <div class="form-group">
+      <label class="form-label">📍 City</label>
+      <select class="form-input" id="reg-city">
+        <option>Kigali 🇷🇼</option>
+        <option>Nairobi 🇰🇪</option>
+        <option>Lagos 🇳🇬</option>
+        <option>Kampala 🇺🇬</option>
+        <option>Accra 🇬🇭</option>
+        <option>Dar es Salaam 🇹🇿</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label class="form-label">🔐 Password</label>
+      <input class="form-input" id="reg-password" type="password" placeholder="Min 6 characters"/>
+    </div>
+    <div class="error-msg" id="reg-error-msg"></div>
+    <div class="success-msg" id="reg-success-msg"></div>
+    <button class="login-btn" onclick="handleRegister()">✅ Create My Account</button>
+    <div class="divider">or</div>
+    <div style="text-align:center;">
+      <a href="#" onclick="showLogin()" style="color:var(--muted);font-size:12px;">Already have an account? Login here</a>
     </div>
   </div>
-
-
+</div>
 
 <script>
   let selectedRole = 'operator';
+  let selectedRegRole = 'operator';
 
   function selectRole(role) {
     selectedRole = role;
-    document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('#login-card .role-btn').forEach(b => b.classList.remove('active'));
     document.getElementById(`role-${role}`).classList.add('active');
+  }
+
+  function selectRegRole(role) {
+    selectedRegRole = role;
+    document.querySelectorAll('#register-card .role-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById(`reg-role-${role}`).classList.add('active');
+  }
+
+  function showRegister() {
+    document.getElementById('register-card').style.display = 'block';
+    document.getElementById('register-card').scrollIntoView({behavior:'smooth'});
+  }
+
+  function showLogin() {
+    document.getElementById('register-card').style.display = 'none';
+    window.scrollTo({top:0,behavior:'smooth'});
   }
 
   function quickLogin(email, password, role) {
@@ -556,108 +226,85 @@
     setTimeout(() => handleLogin(), 300);
   }
 
+  function redirect(role) {
+    if (role === 'passenger') window.location.href = 'passenger.html';
+    else if (role === 'driver') window.location.href = 'driver.html';
+    else window.location.href = 'index.html';
+  }
+
   function handleLogin() {
-    const email = document.getElementById('email').value;
+    const email = document.getElementById('email').value.trim();
     const password = document.getElementById('password').value;
     const errorMsg = document.getElementById('error-msg');
+    errorMsg.classList.remove('show');
 
     if (!email || !password) {
-      errorMsg.classList.add('show');
       errorMsg.textContent = '❌ Please enter email and password';
+      errorMsg.classList.add('show');
+      return;
+    }
+
+    // Check registered users
+    const users = JSON.parse(localStorage.getItem('cr_users') || '{}');
+    if (users[email] && users[email].password === password) {
+      localStorage.setItem('cr_user', JSON.stringify(users[email]));
+      redirect(users[email].role);
       return;
     }
 
     // Demo accounts
-    const accounts = {
-      'passenger@connectride.com': { password: 'demo123', role: 'passenger', name: 'Amina Uwase' },
-      'driver@connectride.com': { password: 'demo123', role: 'driver', name: 'Jean-Paul M.' },
-      'operator@connectride.com': { password: 'demo123', role: 'operator', name: 'Gerishom' },
+    const demos = {
+      'passenger@connectride.com': {password:'demo123', role:'passenger', name:'Amina Uwase'},
+      'driver@connectride.com': {password:'demo123', role:'driver', name:'Jean-Paul M.'},
+      'operator@connectride.com': {password:'demo123', role:'operator', name:'Gerishom'},
     };
 
-    // Check registered users too
-    const registeredUsers = JSON.parse(localStorage.getItem('cr_users') || '{}');
-    const registeredUser = registeredUsers[email];
-    if (registeredUser && registeredUser.password === password) {
-      localStorage.setItem('cr_user', JSON.stringify(registeredUser));
-      const role = registeredUser.role;
-      if (role === 'passenger') window.location.href = 'passenger.html';
-      else if (role === 'driver') window.location.href = 'driver.html';
-      else window.location.href = 'index.html';
-      return;
-    }
-
-    const account = accounts[email];
-    if (account && account.password === password) {
-      // Save user to session
-      localStorage.setItem('cr_user', JSON.stringify({
-        email,
-        name: account.name,
-        role: selectedRole || account.role
-      }));
-
-      // Redirect based on role
-      const role = selectedRole || account.role;
-      if (role === 'passenger') window.location.href = 'passenger.html';
-      else if (role === 'driver') window.location.href = 'driver.html';
-      else window.location.href = 'index.html';
+    const demo = demos[email];
+    if (demo && demo.password === password) {
+      localStorage.setItem('cr_user', JSON.stringify({email, name:demo.name, role:selectedRole||demo.role}));
+      redirect(selectedRole || demo.role);
     } else {
-      errorMsg.classList.add('show');
       errorMsg.textContent = '❌ Invalid credentials. Use demo accounts below.';
+      errorMsg.classList.add('show');
     }
-  }
-
-  // Allow Enter key
-  document.addEventListener('keypress', (e) => {
-    if (e.key === 'Enter') handleLogin();
-  });
-</script>
-</body>
-</html>
-let selectedRegRole = 'operator';
-
-  function showRegister() {
-    document.getElementById('register-section').style.display = 'block';
-    document.getElementById('register-section').scrollIntoView({behavior:'smooth'});
-  }
-
-  function hideRegister() {
-    document.getElementById('register-section').style.display = 'none';
-  }
-
-  function selectRegRole(role) {
-    selectedRegRole = role;
-    document.querySelectorAll('[id^="reg-role-"]').forEach(b => b.classList.remove('active'));
-    document.getElementById(`reg-role-${role}`).classList.add('active');
   }
 
   function handleRegister() {
-    const name = document.getElementById('reg-name').value;
-    const email = document.getElementById('reg-email').value;
+    const name = document.getElementById('reg-name').value.trim();
+    const email = document.getElementById('reg-email').value.trim();
     const password = document.getElementById('reg-password').value;
     const city = document.getElementById('reg-city').value;
+    const err = document.getElementById('reg-error-msg');
+    const suc = document.getElementById('reg-success-msg');
+    err.classList.remove('show'); suc.classList.remove('show');
 
     if (!name || !email || !password) {
-      alert('Please fill in all fields!');
-      return;
+      err.textContent = '❌ Please fill in all fields!';
+      err.classList.add('show'); return;
+    }
+    if (password.length < 6) {
+      err.textContent = '❌ Password must be at least 6 characters!';
+      err.classList.add('show'); return;
     }
 
-    // Save to localStorage
     const users = JSON.parse(localStorage.getItem('cr_users') || '{}');
     if (users[email]) {
-      alert('Account already exists! Please login.');
-      return;
+      err.textContent = '❌ Account already exists! Please login.';
+      err.classList.add('show'); return;
     }
 
-    users[email] = { name, email, password, role: selectedRegRole, city };
+    const newUser = {name, email, password, role:selectedRegRole, city};
+    users[email] = newUser;
     localStorage.setItem('cr_users', JSON.stringify(users));
+    localStorage.setItem('cr_user', JSON.stringify(newUser));
 
-    // Auto login
-    localStorage.setItem('cr_user', JSON.stringify({ name, email, role: selectedRegRole, city }));
+    suc.textContent = `✅ Account created! Welcome ${name}! Redirecting...`;
+    suc.classList.add('show');
 
-    alert(`✅ Account created! Welcome ${name}!`);
-
-    // Redirect
-    if (selectedRegRole === 'passenger') window.location.href = 'passenger.html';
-    else if (selectedRegRole === 'driver') window.location.href = 'driver.html';
-    else window.location.href = 'index.html';
+    setTimeout(() => redirect(selectedRegRole), 1500);
   }
+
+  document.addEventListener('keypress', e => { if (e.key === 'Enter') handleLogin(); });
+</script>
+</body>
+</html>
