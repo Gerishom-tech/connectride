@@ -486,11 +486,59 @@
   </div>
 
   <div class="bottom-links">
-    <p>Built for <a href="#">Africa Ignite Hackathon 2026</a> 🏆</p>
-    <p style="margin-top:6px">Powered by Nokia Network as Code • CAMARA APIs</p>
+    <p>Don't have an account? <a href="#" onclick="showRegister()">Register here</a></p>
+    <p style="margin-top:6px">Built for <a href="#">Africa Ignite Hackathon 2026</a> 🏆</p>
   </div>
 
-</div>
+  <!-- Register form (hidden by default) -->
+  <div id="register-section" style="display:none;margin-top:16px;">
+    <div class="login-card">
+      <div class="login-title">Create Account 🚀</div>
+      <div class="login-subtitle">Join ConnectRide today</div>
+      <div class="role-selector">
+        <button class="role-btn" id="reg-role-passenger" onclick="selectRegRole('passenger')">
+          <span class="role-icon">👤</span>Passenger
+        </button>
+        <button class="role-btn" id="reg-role-driver" onclick="selectRegRole('driver')">
+          <span class="role-icon">🛵</span>Driver
+        </button>
+        <button class="role-btn active" id="reg-role-operator" onclick="selectRegRole('operator')">
+          <span class="role-icon">📊</span>Operator
+        </button>
+      </div>
+      <div class="form-group">
+        <label class="form-label">👤 Full Name</label>
+        <input class="form-input" id="reg-name" placeholder="Your full name"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">📧 Email</label>
+        <input class="form-input" id="reg-email" type="email" placeholder="your@email.com"/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">📍 City</label>
+        <select class="form-input" id="reg-city">
+          <option>Kigali 🇷🇼</option>
+          <option>Nairobi 🇰🇪</option>
+          <option>Lagos 🇳🇬</option>
+          <option>Kampala 🇺🇬</option>
+          <option>Accra 🇬🇭</option>
+          <option>Dar es Salaam 🇹🇿</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">🔐 Password</label>
+        <input class="form-input" id="reg-password" type="password" placeholder="Create password"/>
+      </div>
+      <button class="login-btn" onclick="handleRegister()">
+        ✅ Create Account
+      </button>
+      <div style="text-align:center;margin-top:12px;">
+        <a href="#" onclick="hideRegister()" style="color:var(--muted);font-size:12px;">Back to Login</a>
+      </div>
+    </div>
+  </div>
+
+
 
 <script>
   let selectedRole = 'operator';
@@ -526,6 +574,18 @@
       'operator@connectride.com': { password: 'demo123', role: 'operator', name: 'Gerishom' },
     };
 
+    // Check registered users too
+    const registeredUsers = JSON.parse(localStorage.getItem('cr_users') || '{}');
+    const registeredUser = registeredUsers[email];
+    if (registeredUser && registeredUser.password === password) {
+      localStorage.setItem('cr_user', JSON.stringify(registeredUser));
+      const role = registeredUser.role;
+      if (role === 'passenger') window.location.href = 'passenger.html';
+      else if (role === 'driver') window.location.href = 'driver.html';
+      else window.location.href = 'index.html';
+      return;
+    }
+
     const account = accounts[email];
     if (account && account.password === password) {
       // Save user to session
@@ -553,3 +613,51 @@
 </script>
 </body>
 </html>
+let selectedRegRole = 'operator';
+
+  function showRegister() {
+    document.getElementById('register-section').style.display = 'block';
+    document.getElementById('register-section').scrollIntoView({behavior:'smooth'});
+  }
+
+  function hideRegister() {
+    document.getElementById('register-section').style.display = 'none';
+  }
+
+  function selectRegRole(role) {
+    selectedRegRole = role;
+    document.querySelectorAll('[id^="reg-role-"]').forEach(b => b.classList.remove('active'));
+    document.getElementById(`reg-role-${role}`).classList.add('active');
+  }
+
+  function handleRegister() {
+    const name = document.getElementById('reg-name').value;
+    const email = document.getElementById('reg-email').value;
+    const password = document.getElementById('reg-password').value;
+    const city = document.getElementById('reg-city').value;
+
+    if (!name || !email || !password) {
+      alert('Please fill in all fields!');
+      return;
+    }
+
+    // Save to localStorage
+    const users = JSON.parse(localStorage.getItem('cr_users') || '{}');
+    if (users[email]) {
+      alert('Account already exists! Please login.');
+      return;
+    }
+
+    users[email] = { name, email, password, role: selectedRegRole, city };
+    localStorage.setItem('cr_users', JSON.stringify(users));
+
+    // Auto login
+    localStorage.setItem('cr_user', JSON.stringify({ name, email, role: selectedRegRole, city }));
+
+    alert(`✅ Account created! Welcome ${name}!`);
+
+    // Redirect
+    if (selectedRegRole === 'passenger') window.location.href = 'passenger.html';
+    else if (selectedRegRole === 'driver') window.location.href = 'driver.html';
+    else window.location.href = 'index.html';
+  }
