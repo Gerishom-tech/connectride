@@ -8,195 +8,63 @@
   @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap');
   * { margin: 0; padding: 0; box-sizing: border-box; }
   :root {
-    --bg: #0a0e1a;
-    --surface: #111827;
-    --surface2: #1a2235;
-    --border: #1e2d45;
-    --accent: #00e5a0;
-    --accent2: #0099ff;
-    --warn: #ff6b35;
-    --danger: #ff3366;
-    --text: #e8edf5;
-    --muted: #6b7fa3;
+    --bg: #0a0e1a; --surface: #111827; --surface2: #1a2235;
+    --border: #1e2d45; --accent: #00e5a0; --accent2: #0099ff;
+    --warn: #ff6b35; --danger: #ff3366; --text: #e8edf5; --muted: #6b7fa3;
   }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    font-family: 'Syne', sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-  }
+  body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
   body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image:
-      linear-gradient(rgba(0,229,160,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(0,229,160,0.03) 1px, transparent 1px);
-    background-size: 40px 40px;
-    pointer-events: none;
-    z-index: 0;
+    content: ''; position: fixed; inset: 0;
+    background-image: linear-gradient(rgba(0,229,160,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,160,0.03) 1px, transparent 1px);
+    background-size: 40px 40px; pointer-events: none; z-index: 0;
   }
   .app { position: relative; z-index: 1; max-width: 480px; margin: 0 auto; padding: 20px; }
 
-  /* Header */
-  header {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 14px 20px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    margin-bottom: 20px;
-  }
+  header { display: flex; align-items: center; justify-content: space-between; padding: 14px 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; margin-bottom: 20px; }
   .user-info { display: flex; align-items: center; gap: 10px; }
-  .user-avatar {
-    width: 36px; height: 36px; border-radius: 50%;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    display: flex; align-items: center; justify-content: center;
-    font-size: 18px;
-  }
+  .user-avatar { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg, var(--accent), var(--accent2)); display: flex; align-items: center; justify-content: center; font-size: 18px; }
   .user-name { font-size: 14px; font-weight: 700; }
   .user-role { font-size: 10px; color: var(--muted); text-transform: uppercase; }
-  .logout-btn {
-    font-size: 11px; color: var(--muted);
-    background: none; border: 1px solid var(--border);
-    padding: 6px 12px; border-radius: 8px;
-    cursor: pointer; font-family: 'Syne', sans-serif;
-    transition: all 0.2s;
-  }
+  .logout-btn { font-size: 11px; color: var(--muted); background: none; border: 1px solid var(--border); padding: 6px 12px; border-radius: 8px; cursor: pointer; font-family: 'Syne', sans-serif; transition: all 0.2s; }
   .logout-btn:hover { color: var(--danger); border-color: var(--danger); }
 
-  /* Panel */
-  .panel {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    overflow: hidden;
-    margin-bottom: 16px;
-  }
-  .panel-header {
-    padding: 14px 20px;
-    border-bottom: 1px solid var(--border);
-    font-size: 12px; font-weight: 700;
-    text-transform: uppercase; letter-spacing: 1px; color: var(--muted);
-    display: flex; align-items: center; justify-content: space-between;
-  }
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 16px; }
+  .panel-header { padding: 14px 20px; border-bottom: 1px solid var(--border); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); display: flex; align-items: center; justify-content: space-between; }
 
-  /* City selector */
-  .city-selector {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 8px; padding: 16px;
-  }
-  .city-btn {
-    padding: 10px 8px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    color: var(--muted);
-    font-family: 'Syne', sans-serif;
-    font-size: 11px; font-weight: 700;
-    cursor: pointer; transition: all 0.2s;
-    text-align: center;
-  }
+  .city-selector { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; padding: 16px; }
+  .city-btn { padding: 10px 8px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--muted); font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.2s; text-align: center; }
   .city-btn:hover { border-color: var(--accent); color: var(--text); }
-  .city-btn.active {
-    background: rgba(0,229,160,0.1);
-    border-color: var(--accent);
-    color: var(--accent);
-  }
+  .city-btn.active { background: rgba(0,229,160,0.1); border-color: var(--accent); color: var(--accent); }
   .city-flag { font-size: 20px; display: block; margin-bottom: 4px; }
 
-  /* Ride form */
   .ride-form { padding: 16px 20px; }
   .form-group { margin-bottom: 14px; }
-  .form-label {
-    font-size: 11px; color: var(--muted);
-    text-transform: uppercase; letter-spacing: 1px;
-    margin-bottom: 6px; display: block;
-  }
-  .form-input {
-    width: 100%; padding: 12px 16px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    color: var(--text);
-    font-family: 'Syne', sans-serif; font-size: 13px;
-    outline: none; transition: all 0.2s;
-  }
+  .form-label { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; display: block; }
+  .form-input { width: 100%; padding: 12px 16px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; color: var(--text); font-family: 'Syne', sans-serif; font-size: 13px; outline: none; transition: all 0.2s; }
   .form-input:focus { border-color: var(--accent); }
 
-  /* Ride type */
-  .ride-types {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 8px; margin-bottom: 16px;
-  }
-  .ride-type {
-    padding: 12px 8px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    text-align: center; cursor: pointer;
-    transition: all 0.2s;
-  }
+  .ride-types { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px; }
+  .ride-type { padding: 12px 8px; background: var(--surface2); border: 1px solid var(--border); border-radius: 10px; text-align: center; cursor: pointer; transition: all 0.2s; }
   .ride-type:hover { border-color: var(--accent2); }
-  .ride-type.active {
-    background: rgba(0,153,255,0.1);
-    border-color: var(--accent2);
-  }
+  .ride-type.active { background: rgba(0,153,255,0.1); border-color: var(--accent2); }
   .ride-type-icon { font-size: 24px; display: block; margin-bottom: 4px; }
   .ride-type-name { font-size: 11px; font-weight: 700; color: var(--text); }
   .ride-type-price { font-size: 10px; color: var(--muted); font-family: 'Space Mono', monospace; }
 
-  /* Request button */
-  .request-btn {
-    width: 100%; padding: 14px;
-    background: linear-gradient(135deg, var(--accent), var(--accent2));
-    border: none; border-radius: 12px;
-    color: #0a0e1a; font-family: 'Syne', sans-serif;
-    font-size: 14px; font-weight: 800;
-    text-transform: uppercase; letter-spacing: 1px;
-    cursor: pointer; transition: all 0.2s;
-  }
-  .request-btn:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 30px rgba(0,229,160,0.4);
-  }
+  .request-btn { width: 100%; padding: 14px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border: none; border-radius: 12px; color: #0a0e1a; font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: all 0.2s; }
+  .request-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,229,160,0.4); }
   .request-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+  .progress-bar { height: 3px; background: var(--border); border-radius: 2px; margin-top: 12px; overflow: hidden; }
+  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); width: 0%; transition: width 0.4s; }
 
-  /* Status stages */
-  .status-stages {
-    padding: 16px 20px;
-    display: none;
-  }
+  .status-stages { padding: 16px 20px; display: none; }
   .status-stages.show { display: block; }
-  .stage {
-    display: flex; align-items: center; gap: 12px;
-    padding: 12px 0;
-    border-bottom: 1px solid var(--border);
-    transition: all 0.3s;
-  }
+  .stage { display: flex; align-items: center; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); transition: all 0.3s; }
   .stage:last-child { border-bottom: none; }
-  .stage-icon {
-    width: 36px; height: 36px; border-radius: 50%;
-    background: var(--surface2);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px; flex-shrink: 0;
-    border: 2px solid var(--border);
-    transition: all 0.3s;
-  }
-  .stage.active .stage-icon {
-    border-color: var(--accent2);
-    background: rgba(0,153,255,0.1);
-    animation: pulse-ring 1.5s infinite;
-  }
-  .stage.done .stage-icon {
-    border-color: var(--accent);
-    background: rgba(0,229,160,0.1);
-  }
-  @keyframes pulse-ring {
-    0%,100% { box-shadow: 0 0 0 0 rgba(0,153,255,0.4); }
-    50% { box-shadow: 0 0 0 8px rgba(0,153,255,0); }
-  }
+  .stage-icon { width: 36px; height: 36px; border-radius: 50%; background: var(--surface2); display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; border: 2px solid var(--border); transition: all 0.3s; }
+  .stage.active .stage-icon { border-color: var(--accent2); background: rgba(0,153,255,0.1); animation: pulse-ring 1.5s infinite; }
+  .stage.done .stage-icon { border-color: var(--accent); background: rgba(0,229,160,0.1); }
+  @keyframes pulse-ring { 0%,100%{box-shadow:0 0 0 0 rgba(0,153,255,0.4)} 50%{box-shadow:0 0 0 8px rgba(0,153,255,0)} }
   .stage-info { flex: 1; }
   .stage-name { font-size: 13px; font-weight: 700; margin-bottom: 2px; }
   .stage-desc { font-size: 11px; color: var(--muted); }
@@ -206,61 +74,22 @@
   .status-done { color: var(--accent); }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
 
-  /* Assigned driver card */
-  .driver-card {
-    padding: 16px 20px;
-    display: none;
-  }
+  .driver-card { padding: 16px 20px; display: none; }
   .driver-card.show { display: block; }
-  .driver-card-inner {
-    background: rgba(0,229,160,0.06);
-    border: 1px solid rgba(0,229,160,0.3);
-    border-radius: 12px;
-    padding: 16px;
-  }
-  .driver-card-label {
-    font-size: 10px; text-transform: uppercase;
-    letter-spacing: 1px; color: var(--accent);
-    font-weight: 700; margin-bottom: 12px;
-  }
-  .driver-card-main {
-    display: flex; align-items: center; gap: 12px;
-    margin-bottom: 12px;
-  }
-  .driver-card-avatar {
-    width: 48px; height: 48px; border-radius: 50%;
-    background: var(--surface2);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 24px; border: 2px solid var(--accent);
-  }
+  .driver-card-inner { background: rgba(0,229,160,0.06); border: 1px solid rgba(0,229,160,0.3); border-radius: 12px; padding: 16px; }
+  .driver-card-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--accent); font-weight: 700; margin-bottom: 12px; }
+  .driver-card-main { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+  .driver-card-avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--surface2); display: flex; align-items: center; justify-content: center; font-size: 24px; border: 2px solid var(--accent); }
   .driver-card-name { font-size: 18px; font-weight: 800; }
   .driver-card-zone { font-size: 12px; color: var(--muted); }
-  .driver-card-operator {
-    font-size: 11px; color: var(--accent2);
-    font-family: 'Space Mono', monospace;
-  }
-  .driver-card-stats {
-    display: grid; grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-  }
-  .driver-stat {
-    background: var(--surface2);
-    border-radius: 8px; padding: 8px;
-    text-align: center;
-  }
-  .driver-stat-val {
-    font-family: 'Space Mono', monospace;
-    font-size: 16px; font-weight: 700; color: var(--accent);
-  }
+  .driver-card-operator { font-size: 11px; color: var(--accent2); font-family: 'Space Mono', monospace; }
+  .driver-card-stats { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .driver-stat { background: var(--surface2); border-radius: 8px; padding: 8px; text-align: center; }
+  .driver-stat-val { font-family: 'Space Mono', monospace; font-size: 16px; font-weight: 700; color: var(--accent); }
   .driver-stat-lbl { font-size: 10px; color: var(--muted); }
 
-  /* Network check display */
   .network-checks { padding: 16px 20px; }
-  .check-item {
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 8px 0; border-bottom: 1px solid var(--border);
-    font-size: 12px;
-  }
+  .check-item { display: flex; align-items: center; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 12px; }
   .check-item:last-child { border-bottom: none; }
   .check-name { display: flex; align-items: center; gap: 8px; font-weight: 600; }
   .check-val { font-family: 'Space Mono', monospace; font-size: 11px; }
@@ -268,26 +97,12 @@
   .fail { color: var(--danger); }
   .pending { color: var(--muted); }
 
-  /* Trip history */
-  .trip-item {
-    padding: 12px 20px;
-    border-bottom: 1px solid var(--border);
-    display: flex; align-items: center; gap: 12px;
-  }
-  .trip-icon {
-    width: 32px; height: 32px; border-radius: 8px;
-    background: var(--surface2);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 14px; flex-shrink: 0;
-  }
+  .trip-item { padding: 12px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+  .trip-icon { width: 32px; height: 32px; border-radius: 8px; background: var(--surface2); display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
   .trip-info { flex: 1; }
   .trip-route { font-size: 12px; font-weight: 700; margin-bottom: 2px; }
   .trip-date { font-size: 10px; color: var(--muted); }
   .trip-status { font-size: 11px; font-family: 'Space Mono', monospace; }
-
-  /* Progress bar */
-  .progress-bar { height: 3px; background: var(--border); border-radius: 2px; margin-top: 12px; overflow: hidden; }
-  .progress-fill { height: 100%; background: linear-gradient(90deg, var(--accent), var(--accent2)); width: 0%; transition: width 0.4s; }
 
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-track { background: transparent; }
@@ -297,13 +112,12 @@
 <body>
 <div class="app">
 
-  <!-- Header -->
   <header>
     <div class="user-info">
       <div class="user-avatar">👤</div>
       <div>
         <div class="user-name" id="user-name">Amina Uwase</div>
-        <div class="user-role">Passenger • Kigali 🇷🇼</div>
+        <div class="user-role" id="user-role">Passenger • Kigali 🇷🇼</div>
       </div>
     </div>
     <button class="logout-btn" onclick="logout()">Logout</button>
@@ -313,25 +127,25 @@
   <div class="panel">
     <div class="panel-header">
       <span>🌍 Select Your City</span>
-      <span id="selected-city-label" style="color:var(--accent);font-size:10px;">KIGALI</span>
+      <span id="selected-city-label" style="color:var(--accent);font-size:10px;">KIGALI 🇷🇼</span>
     </div>
     <div class="city-selector">
-      <button class="city-btn active" onclick="selectCity('Kigali', '🇷🇼', this)">
+      <button class="city-btn active" id="city-btn-Kigali" onclick="selectCity('Kigali', '🇷🇼', this)">
         <span class="city-flag">🇷🇼</span>Kigali
       </button>
-      <button class="city-btn" onclick="selectCity('Nairobi', '🇰🇪', this)">
+      <button class="city-btn" id="city-btn-Nairobi" onclick="selectCity('Nairobi', '🇰🇪', this)">
         <span class="city-flag">🇰🇪</span>Nairobi
       </button>
-      <button class="city-btn" onclick="selectCity('Lagos', '🇳🇬', this)">
+      <button class="city-btn" id="city-btn-Lagos" onclick="selectCity('Lagos', '🇳🇬', this)">
         <span class="city-flag">🇳🇬</span>Lagos
       </button>
-      <button class="city-btn" onclick="selectCity('Kampala', '🇺🇬', this)">
+      <button class="city-btn" id="city-btn-Kampala" onclick="selectCity('Kampala', '🇺🇬', this)">
         <span class="city-flag">🇺🇬</span>Kampala
       </button>
-      <button class="city-btn" onclick="selectCity('Accra', '🇬🇭', this)">
+      <button class="city-btn" id="city-btn-Accra" onclick="selectCity('Accra', '🇬🇭', this)">
         <span class="city-flag">🇬🇭</span>Accra
       </button>
-      <button class="city-btn" onclick="selectCity('Dar es Salaam', '🇹🇿', this)">
+      <button class="city-btn" id="city-btn-Dar es Salaam" onclick="selectCity('Dar es Salaam', '🇹🇿', this)">
         <span class="city-flag">🇹🇿</span>Dar es Salaam
       </button>
     </div>
@@ -344,23 +158,21 @@
       <span style="color:var(--accent2);font-size:10px;" id="city-label">KIGALI, RW</span>
     </div>
     <div class="ride-form">
-
-      <!-- Ride types -->
       <div class="ride-types">
-        <div class="ride-type active" onclick="selectRideType(this, 'Moto', 'RWF 1,500')">
+        <div class="ride-type active" id="type-moto" onclick="selectRideType(this, 'Moto')">
           <span class="ride-type-icon">🏍️</span>
           <div class="ride-type-name">Moto</div>
-          <div class="ride-type-price">RWF 1,500</div>
+          <div class="ride-type-price" id="price-moto">RWF 1,500</div>
         </div>
-        <div class="ride-type" onclick="selectRideType(this, 'Car', 'RWF 4,000')">
+        <div class="ride-type" id="type-car" onclick="selectRideType(this, 'Car')">
           <span class="ride-type-icon">🚗</span>
           <div class="ride-type-name">Car</div>
-          <div class="ride-type-price">RWF 4,000</div>
+          <div class="ride-type-price" id="price-car">RWF 4,000</div>
         </div>
-        <div class="ride-type" onclick="selectRideType(this, 'Delivery', 'RWF 2,000')">
+        <div class="ride-type" id="type-delivery" onclick="selectRideType(this, 'Delivery')">
           <span class="ride-type-icon">📦</span>
           <div class="ride-type-name">Delivery</div>
-          <div class="ride-type-price">RWF 2,000</div>
+          <div class="ride-type-price" id="price-delivery">RWF 2,000</div>
         </div>
       </div>
 
@@ -370,7 +182,7 @@
       </div>
       <div class="form-group">
         <label class="form-label">🏁 Drop-off Location</label>
-        <input class="form-input" id="dropoff" value="Kigali Convention Centre" placeholder="Where to?"/>
+        <input class="form-input" id="dropoff" value="City Centre" placeholder="Where to?"/>
       </div>
 
       <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);font-family:'Space Mono',monospace;margin-bottom:14px;">
@@ -383,13 +195,12 @@
       <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
     </div>
 
-    <!-- Status stages -->
     <div class="status-stages" id="status-stages">
       <div class="stage" id="stage-1">
         <div class="stage-icon">🔍</div>
         <div class="stage-info">
           <div class="stage-name">Finding nearby drivers</div>
-          <div class="stage-desc">Scanning Kigali for available drivers</div>
+          <div class="stage-desc" id="stage-1-desc">Scanning for available drivers</div>
         </div>
         <span class="stage-status status-pending" id="stage-1-status">Waiting...</span>
       </div>
@@ -419,7 +230,6 @@
       </div>
     </div>
 
-    <!-- Assigned driver -->
     <div class="driver-card" id="driver-card">
       <div class="driver-card-inner">
         <div class="driver-card-label">✅ Driver Assigned by ConnectRide AI</div>
@@ -432,46 +242,25 @@
           </div>
         </div>
         <div class="driver-card-stats">
-          <div class="driver-stat">
-            <div class="driver-stat-val" id="driver-score">—</div>
-            <div class="driver-stat-lbl">Score</div>
-          </div>
-          <div class="driver-stat">
-            <div class="driver-stat-val" id="driver-eta">—</div>
-            <div class="driver-stat-lbl">ETA</div>
-          </div>
-          <div class="driver-stat">
-            <div class="driver-stat-val">4</div>
-            <div class="driver-stat-lbl">Checks ✅</div>
-          </div>
+          <div class="driver-stat"><div class="driver-stat-val" id="driver-score">—</div><div class="driver-stat-lbl">Score</div></div>
+          <div class="driver-stat"><div class="driver-stat-val" id="driver-eta">—</div><div class="driver-stat-lbl">ETA</div></div>
+          <div class="driver-stat"><div class="driver-stat-val">4</div><div class="driver-stat-lbl">Checks ✅</div></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Network Checks (shown after dispatch) -->
+  <!-- Network Checks -->
   <div class="panel" id="checks-panel" style="display:none;">
     <div class="panel-header">
       <span>📡 CAMARA API — Network Checks</span>
       <span style="color:var(--accent);font-size:10px;">NOKIA NaC</span>
     </div>
     <div class="network-checks">
-      <div class="check-item">
-        <div class="check-name">📍 Location Verified</div>
-        <span class="check-val pass" id="chk-loc">—</span>
-      </div>
-      <div class="check-item">
-        <div class="check-name">📶 Network Stable</div>
-        <span class="check-val pass" id="chk-dev">—</span>
-      </div>
-      <div class="check-item">
-        <div class="check-name">🚀 QoS Boosted</div>
-        <span class="check-val pass" id="chk-qos">—</span>
-      </div>
-      <div class="check-item">
-        <div class="check-name">🔐 SIM Secure</div>
-        <span class="check-val pass" id="chk-sim">—</span>
-      </div>
+      <div class="check-item"><div class="check-name">📍 Location Verified</div><span class="check-val pending" id="chk-loc">—</span></div>
+      <div class="check-item"><div class="check-name">📶 Network Stable</div><span class="check-val pending" id="chk-dev">—</span></div>
+      <div class="check-item"><div class="check-name">🚀 QoS Boosted</div><span class="check-val pending" id="chk-qos">—</span></div>
+      <div class="check-item"><div class="check-name">🔐 SIM Secure</div><span class="check-val pending" id="chk-sim">—</span></div>
     </div>
   </div>
 
@@ -479,44 +268,30 @@
   <div class="panel">
     <div class="panel-header">
       <span>🕐 Recent Trips</span>
-      <span style="font-size:10px;color:var(--accent2);">KIGALI</span>
+      <span id="history-city" style="font-size:10px;color:var(--accent2);">KIGALI</span>
     </div>
     <div id="trip-history">
       <div class="trip-item">
         <div class="trip-icon">✅</div>
-        <div class="trip-info">
-          <div class="trip-route">Kimironko → KCC</div>
-          <div class="trip-date">Today, 09:15 AM • Jean-Paul M.</div>
-        </div>
+        <div class="trip-info"><div class="trip-route">Kimironko → KCC</div><div class="trip-date">Today, 09:15 AM • Jean-Paul M.</div></div>
         <span class="trip-status pass">RWF 2,800</span>
       </div>
       <div class="trip-item">
         <div class="trip-icon">✅</div>
-        <div class="trip-info">
-          <div class="trip-route">Remera → Nyamirambo</div>
-          <div class="trip-date">Yesterday • Olive R.</div>
-        </div>
+        <div class="trip-info"><div class="trip-route">Remera → Nyamirambo</div><div class="trip-date">Yesterday • Olive R.</div></div>
         <span class="trip-status pass">RWF 3,500</span>
       </div>
       <div class="trip-item">
         <div class="trip-icon">❌</div>
-        <div class="trip-info">
-          <div class="trip-route">Gasabo → Downtown</div>
-          <div class="trip-date">2 days ago • Driver rejected</div>
-        </div>
+        <div class="trip-info"><div class="trip-route">Gasabo → Downtown</div><div class="trip-date">2 days ago • Driver rejected</div></div>
         <span class="trip-status fail">FAILED</span>
       </div>
     </div>
   </div>
 
-  <!-- Bottom nav -->
   <div style="display:flex;gap:8px;margin-top:8px;">
-    <a href="index.html" style="flex:1;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:10px;text-align:center;color:var(--muted);text-decoration:none;font-size:12px;font-weight:700;">
-      📊 Operator View
-    </a>
-    <a href="driver.html" style="flex:1;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:10px;text-align:center;color:var(--muted);text-decoration:none;font-size:12px;font-weight:700;">
-      🛵 Driver View
-    </a>
+    <a href="index.html" style="flex:1;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:10px;text-align:center;color:var(--muted);text-decoration:none;font-size:12px;font-weight:700;">📊 Operator View</a>
+    <a href="driver.html" style="flex:1;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:10px;text-align:center;color:var(--muted);text-decoration:none;font-size:12px;font-weight:700;">🛵 Driver View</a>
   </div>
 
 </div>
@@ -524,28 +299,89 @@
 <script>
   const API_BASE = '/api';
   let selectedCity = 'Kigali';
+  let selectedCityFlag = '🇷🇼';
   let selectedRide = 'Moto';
 
+  // City prices
+  const cityPrices = {
+    Kigali: { moto: 'RWF 1,500', car: 'RWF 4,000', delivery: 'RWF 2,000', dropoff: 'Kigali Convention Centre' },
+    Nairobi: { moto: 'KES 150', car: 'KES 400', delivery: 'KES 200', dropoff: 'Nairobi CBD' },
+    Lagos: { moto: 'NGN 800', car: 'NGN 2,500', delivery: 'NGN 1,200', dropoff: 'Victoria Island' },
+    Kampala: { moto: 'UGX 5,000', car: 'UGX 15,000', delivery: 'UGX 8,000', dropoff: 'Kampala City Centre' },
+    Accra: { moto: 'GHS 15', car: 'GHS 45', delivery: 'GHS 25', dropoff: 'Accra Mall' },
+    'Dar es Salaam': { moto: 'TZS 3,000', car: 'TZS 10,000', delivery: 'TZS 5,000', dropoff: 'Dar es Salaam City Centre' },
+  };
+
+  // City pickup locations
+  const cityPickups = {
+    Kigali: 'Kimironko Market',
+    Nairobi: 'Westlands Mall',
+    Lagos: 'Ikeja City Mall',
+    Kampala: 'Kololo Hill',
+    Accra: 'Osu Oxford Street',
+    'Dar es Salaam': 'Masaki Peninsula',
+  };
+
+  const driverEmojis = ['🧑🏾','👩🏾','🧑🏿','👩🏽','🧑🏾','👩🏾','🧑🏽','👩🏿'];
+
   // Load user
-  const user = JSON.parse(localStorage.getItem('cr_user') || '{"name":"Amina Uwase"}');
+  const user = JSON.parse(localStorage.getItem('cr_user') || '{"name":"Amina Uwase","city":"Kigali"}');
   document.getElementById('user-name').textContent = user.name;
 
-  const driverEmojis = {1:'🧑🏾', 2:'👩🏾', 3:'🧑🏿', 4:'👩🏽', 5:'🧑🏾', 6:'👩🏾'};
-  const operators = ['MTN Rwanda', 'Airtel Rwanda', 'MTN Rwanda', 'Airtel Rwanda', 'MTN Rwanda', 'Airtel Rwanda'];
+  // Set city from user profile
+  if (user.city) {
+    const cityName = user.city.replace(' 🇷🇼','').replace(' 🇰🇪','').replace(' 🇳🇬','').replace(' 🇺🇬','').replace(' 🇬🇭','').replace(' 🇹🇿','').trim();
+    const cityMap = {
+      'Kigali': '🇷🇼', 'Nairobi': '🇰🇪', 'Lagos': '🇳🇬',
+      'Kampala': '🇺🇬', 'Accra': '🇬🇭', 'Dar es Salaam': '🇹🇿'
+    };
+    if (cityMap[cityName]) {
+      selectedCity = cityName;
+      selectedCityFlag = cityMap[cityName];
+      updateCityUI();
+    }
+  }
+
+  function updateCityUI() {
+    // Update buttons
+    document.querySelectorAll('.city-btn').forEach(b => b.classList.remove('active'));
+    const btn = document.getElementById(`city-btn-${selectedCity}`);
+    if (btn) btn.classList.add('active');
+
+    // Update labels
+    document.getElementById('selected-city-label').textContent = `${selectedCity.toUpperCase()} ${selectedCityFlag}`;
+    document.getElementById('city-label').textContent = `${selectedCity.toUpperCase()}`;
+    document.getElementById('history-city').textContent = selectedCity.toUpperCase();
+    document.getElementById('user-role').textContent = `Passenger • ${selectedCity} ${selectedCityFlag}`;
+
+    // Update prices
+    const prices = cityPrices[selectedCity] || cityPrices['Kigali'];
+    document.getElementById('price-moto').textContent = prices.moto;
+    document.getElementById('price-car').textContent = prices.car;
+    document.getElementById('price-delivery').textContent = prices.delivery;
+    document.getElementById('price-display').textContent = prices.moto;
+
+    // Update locations
+    document.getElementById('pickup').value = cityPickups[selectedCity] || 'City Centre';
+    document.getElementById('dropoff').value = prices.dropoff;
+
+    // Update stage desc
+    document.getElementById('stage-1-desc').textContent = `Scanning ${selectedCity} for available drivers`;
+  }
 
   function selectCity(city, flag, btn) {
     selectedCity = city;
-    document.querySelectorAll('.city-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('selected-city-label').textContent = city.toUpperCase();
-    document.getElementById('city-label').textContent = city.toUpperCase();
+    selectedCityFlag = flag;
+    updateCityUI();
   }
 
-  function selectRideType(btn, type, price) {
+  function selectRideType(btn, type) {
     selectedRide = type;
     document.querySelectorAll('.ride-type').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
-    document.getElementById('price-display').textContent = price;
+    const prices = cityPrices[selectedCity] || cityPrices['Kigali'];
+    const priceMap = { 'Moto': prices.moto, 'Car': prices.car, 'Delivery': prices.delivery };
+    document.getElementById('price-display').textContent = priceMap[type] || prices.moto;
   }
 
   async function setStage(stageNum, status) {
@@ -559,7 +395,7 @@
   async function requestRide() {
     const btn = document.getElementById('request-btn');
     btn.disabled = true;
-    btn.textContent = '⏳ ConnectRide is checking drivers...';
+    btn.textContent = `⏳ ConnectRide checking ${selectedCity} drivers...`;
 
     document.getElementById('status-stages').classList.add('show');
     document.getElementById('driver-card').classList.remove('show');
@@ -571,12 +407,9 @@
       document.getElementById('progress-fill').style.width = prog + '%';
     }, 100);
 
-    // Stage 1
     await setStage(1, 'active');
     await sleep(1000);
     await setStage(1, 'done');
-
-    // Stage 2
     await setStage(2, 'active');
 
     try {
@@ -591,13 +424,9 @@
       });
       const data = await res.json();
       await setStage(2, 'done');
-
-      // Stage 3
       await setStage(3, 'active');
       await sleep(1000);
       await setStage(3, 'done');
-
-      // Stage 4
       await setStage(4, 'active');
       await sleep(500);
 
@@ -607,25 +436,25 @@
       if (data.assigned) {
         const best = data.assigned;
         const eta = Math.floor(Math.random() * 4) + 2;
-        const driverId = best.driver.id;
+        const driverIdx = (best.driver.id - 1) % driverEmojis.length;
 
-        document.getElementById('driver-emoji').textContent = driverEmojis[driverId] || '🧑🏾';
+        document.getElementById('driver-emoji').textContent = driverEmojis[driverIdx];
         document.getElementById('driver-name').textContent = best.driver.name;
         document.getElementById('driver-zone').textContent = `📍 ${best.driver.zone}, ${selectedCity}`;
-        document.getElementById('driver-operator').textContent = `📱 ${operators[driverId - 1] || 'MTN Rwanda'}`;
+        document.getElementById('driver-operator').textContent = `📱 ${best.driver.operator}`;
         document.getElementById('driver-score').textContent = `${best.score}/100`;
         document.getElementById('driver-eta').textContent = `${eta} min`;
 
-        // Show checks
         const checks = best.checks;
-        document.getElementById('chk-loc').textContent = checks[0].passed ? '✅ Verified' : '❌ Failed';
-        document.getElementById('chk-loc').className = `check-val ${checks[0].passed ? 'pass' : 'fail'}`;
-        document.getElementById('chk-dev').textContent = checks[1].passed ? '✅ Stable' : '❌ Unstable';
-        document.getElementById('chk-dev').className = `check-val ${checks[1].passed ? 'pass' : 'fail'}`;
-        document.getElementById('chk-qos').textContent = checks[2].passed ? '✅ Boosted' : '❌ Failed';
-        document.getElementById('chk-qos').className = `check-val ${checks[2].passed ? 'pass' : 'fail'}`;
-        document.getElementById('chk-sim').textContent = checks[3].passed ? '✅ Secure' : '❌ Risk';
-        document.getElementById('chk-sim').className = `check-val ${checks[3].passed ? 'pass' : 'fail'}`;
+        const setCheck = (id, passed, passText, failText) => {
+          const el = document.getElementById(id);
+          el.textContent = passed ? `✅ ${passText}` : `❌ ${failText}`;
+          el.className = `check-val ${passed ? 'pass' : 'fail'}`;
+        };
+        setCheck('chk-loc', checks[0].passed, 'Verified', 'Failed');
+        setCheck('chk-dev', checks[1].passed, 'Stable', 'Unstable');
+        setCheck('chk-qos', checks[2].passed, 'Boosted', 'Failed');
+        setCheck('chk-sim', checks[3].passed, 'Secure', 'Risk');
 
         document.getElementById('driver-card').classList.add('show');
         document.getElementById('checks-panel').style.display = 'block';
