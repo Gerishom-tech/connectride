@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ConnectRide — MNO Revenue Dashboard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;700;800&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  :root {
+    --bg: #0a0e1a; --surface: #111827; --surface2: #1a2235;
+    --border: #1e2d45; --accent: #00e5a0; --accent2: #0099ff;
+    --warn: #ff6b35; --danger: #ff3366; --text: #e8edf5; --muted: #6b7fa3;
+  }
+  body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background-image: linear-gradient(rgba(0,229,160,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0,229,160,0.03) 1px, transparent 1px);
+    background-size: 40px 40px; pointer-events: none; z-index: 0;
+  }
+  .app { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; padding: 20px; }
+
+  header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 16px 24px; background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; margin-bottom: 20px;
+  }
+  .logo { display: flex; align-items: center; gap: 12px; }
+  .logo-icon { width: 40px; height: 40px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; }
+  .logo-text { font-size: 20px; font-weight: 800; }
+  .logo-text span { color: var(--accent); }
+  .logo-sub { font-size: 11px; color: var(--muted); }
+  .header-right { display: flex; align-items: center; gap: 12px; }
+  .live-badge { font-size: 11px; color: var(--accent); font-family: 'Space Mono', monospace; }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 6px var(--accent); animation: pulse 2s infinite; display: inline-block; margin-right: 6px; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.3} }
+  .back-btn { font-size: 11px; color: var(--muted); background: none; border: 1px solid var(--border); padding: 6px 12px; border-radius: 8px; cursor: pointer; font-family: 'Syne', sans-serif; text-decoration: none; }
+  .back-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+  .panel { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; overflow: hidden; margin-bottom: 16px; }
+  .panel-header { padding: 14px 20px; border-bottom: 1px solid var(--border); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--muted); display: flex; align-items: center; justify-content: space-between; }
+
+  /* Stats grid */
+  .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 20px; }
+  .stat-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .stat-card-icon { font-size: 24px; margin-bottom: 10px; }
+  .stat-card-val { font-family: 'Space Mono', monospace; font-size: 28px; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+  .stat-card-lbl { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.5px; }
+  .stat-card-change { font-size: 11px; color: var(--accent); margin-top: 6px; font-family: 'Space Mono', monospace; }
+
+  /* MNO cards */
+  .mno-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-bottom: 20px; }
+  .mno-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px; transition: all 0.3s; }
+  .mno-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .mno-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+  .mno-logo { width: 44px; height: 44px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 800; flex-shrink: 0; }
+  .mno-name { font-size: 15px; font-weight: 800; }
+  .mno-country { font-size: 11px; color: var(--muted); }
+  .mno-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 14px; }
+  .mno-stat { background: var(--surface2); border-radius: 8px; padding: 10px; text-align: center; }
+  .mno-stat-val { font-family: 'Space Mono', monospace; font-size: 14px; font-weight: 700; color: var(--accent); }
+  .mno-stat-lbl { font-size: 10px; color: var(--muted); margin-top: 2px; }
+  .mno-bar { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; margin-bottom: 8px; }
+  .mno-bar-fill { height: 100%; border-radius: 3px; transition: width 1s ease; }
+  .mno-revenue { font-family: 'Space Mono', monospace; font-size: 18px; font-weight: 700; color: var(--accent); }
+  .mno-revenue-lbl { font-size: 10px; color: var(--muted); text-transform: uppercase; }
+
+  /* API usage table */
+  .api-table { width: 100%; border-collapse: collapse; }
+  .api-table th { padding: 12px 20px; text-align: left; font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid var(--border); font-weight: 700; }
+  .api-table td { padding: 14px 20px; border-bottom: 1px solid var(--border); font-size: 13px; }
+  .api-table tr:last-child td { border-bottom: none; }
+  .api-table tr:hover td { background: var(--surface2); }
+  .api-badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: 700; font-family: 'Space Mono', monospace; }
+  .api-loc { background: rgba(0,153,255,0.15); color: var(--accent2); }
+  .api-dev { background: rgba(0,229,160,0.15); color: var(--accent); }
+  .api-qos { background: rgba(255,107,53,0.15); color: var(--warn); }
+  .api-sim { background: rgba(255,51,102,0.15); color: var(--danger); }
+
+  /* Revenue chart */
+  .chart-container { padding: 20px; }
+  .chart-bars { display: flex; align-items: flex-end; gap: 8px; height: 160px; }
+  .chart-bar-wrap { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .chart-bar { width: 100%; border-radius: 6px 6px 0 0; transition: height 1s ease; min-height: 4px; background: linear-gradient(to top, var(--accent), var(--accent2)); opacity: 0.8; }
+  .chart-bar:hover { opacity: 1; }
+  .chart-label { font-size: 10px; color: var(--muted); font-family: 'Space Mono', monospace; }
+  .chart-val { font-size: 10px; color: var(--accent); font-family: 'Space Mono', monospace; }
+
+  /* Live feed */
+  .live-feed { max-height: 220px; overflow-y: auto; }
+  .feed-item { display: flex; align-items: center; gap: 12px; padding: 12px 20px; border-bottom: 1px solid var(--border); animation: slideIn 0.3s ease; }
+  @keyframes slideIn { from{opacity:0;transform:translateX(-10px)} to{opacity:1;transform:translateX(0)} }
+  .feed-item:last-child { border-bottom: none; }
+  .feed-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 14px; flex-shrink: 0; }
+  .feed-info { flex: 1; }
+  .feed-title { font-size: 12px; font-weight: 700; margin-bottom: 2px; }
+  .feed-sub { font-size: 10px; color: var(--muted); font-family: 'Space Mono', monospace; }
+  .feed-amount { font-family: 'Space Mono', monospace; font-size: 12px; font-weight: 700; color: var(--accent); }
+
+  /* City breakdown */
+  .city-row { display: flex; align-items: center; gap: 12px; padding: 12px 20px; border-bottom: 1px solid var(--border); }
+  .city-row:last-child { border-bottom: none; }
+  .city-flag { font-size: 20px; }
+  .city-info { flex: 1; }
+  .city-name { font-size: 13px; font-weight: 700; }
+  .city-ops { font-size: 11px; color: var(--muted); }
+  .city-bar { flex: 2; height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .city-bar-fill { height: 100%; border-radius: 3px; background: linear-gradient(90deg, var(--accent), var(--accent2)); }
+  .city-revenue { font-family: 'Space Mono', monospace; font-size: 12px; font-weight: 700; color: var(--accent); min-width: 80px; text-align: right; }
+
+  ::-webkit-scrollbar { width: 4px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
+</style>
+</head>
+<body>
+<div class="app">
+
+  <!-- Header -->
+  <header>
+    <div class="logo">
+      <div class="logo-icon">📡</div>
+      <div>
+        <div class="logo-text">Connect<span>Ride</span> — MNO Portal</div>
+        <div class="logo-sub">Nokia Network as Code • Revenue Dashboard</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="status-dot"></span>
+      <span class="live-badge">NOKIA NaC • LIVE</span>
+      <a href="index.html" class="back-btn">← Operator View</a>
+    </div>
+  </header>
+
+  <!-- Top Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-card-icon">💰</div>
+      <div class="stat-card-val" id="total-revenue">RWF 0</div>
+      <div class="stat-card-lbl">Total Revenue Today</div>
+      <div class="stat-card-change" id="revenue-change">↑ Loading...</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-icon">📡</div>
+      <div class="stat-card-val" id="total-calls">0</div>
+      <div class="stat-card-lbl">API Calls Today</div>
+      <div class="stat-card-change">↑ +12% vs yesterday</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-icon">🚀</div>
+      <div class="stat-card-val" id="qos-boosts">0</div>
+      <div class="stat-card-lbl">QoS Boosts Activated</div>
+      <div class="stat-card-change">↑ +8% vs yesterday</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-card-icon">🌍</div>
+      <div class="stat-card-val">6</div>
+      <div class="stat-card-lbl">Cities Active</div>
+      <div class="stat-card-change">🇷🇼🇰🇪🇳🇬🇺🇬🇬🇭🇹🇿</div>
+    </div>
+  </div>
+
+  <!-- MNO Cards -->
+  <div class="mno-grid">
+    <!-- MTN -->
+    <div class="mno-card">
+      <div class="mno-header">
+        <div class="mno-logo" style="background:#ffcc00;color:#000;">MTN</div>
+        <div>
+          <div class="mno-name">MTN Group</div>
+          <div class="mno-country">🇷🇼 Rwanda • 🇳🇬 Nigeria • 🇺🇬 Uganda • 🇬🇭 Ghana</div>
+        </div>
+      </div>
+      <div class="mno-stats">
+        <div class="mno-stat"><div class="mno-stat-val" id="mtn-calls">1,247</div><div class="mno-stat-lbl">API Calls</div></div>
+        <div class="mno-stat"><div class="mno-stat-val" id="mtn-qos">892</div><div class="mno-stat-lbl">QoS Boosts</div></div>
+      </div>
+      <div class="mno-bar"><div class="mno-bar-fill" style="width:78%;background:linear-gradient(90deg,#ffcc00,#ff9900);"></div></div>
+      <div class="mno-revenue-lbl">Today's Revenue</div>
+      <div class="mno-revenue" id="mtn-revenue">RWF 124,700</div>
+    </div>
+
+    <!-- Airtel -->
+    <div class="mno-card">
+      <div class="mno-header">
+        <div class="mno-logo" style="background:#ff0000;color:#fff;">AIRTEL</div>
+        <div>
+          <div class="mno-name">Airtel Africa</div>
+          <div class="mno-country">🇷🇼 Rwanda • 🇰🇪 Kenya • 🇺🇬 Uganda • 🇹🇿 Tanzania</div>
+        </div>
+      </div>
+      <div class="mno-stats">
+        <div class="mno-stat"><div class="mno-stat-val" id="airtel-calls">987</div><div class="mno-stat-lbl">API Calls</div></div>
+        <div class="mno-stat"><div class="mno-stat-val" id="airtel-qos">701</div><div class="mno-stat-lbl">QoS Boosts</div></div>
+      </div>
+      <div class="mno-bar"><div class="mno-bar-fill" style="width:62%;background:linear-gradient(90deg,#ff0000,#ff6600);"></div></div>
+      <div class="mno-revenue-lbl">Today's Revenue</div>
+      <div class="mno-revenue" id="airtel-revenue">RWF 98,700</div>
+    </div>
+
+    <!-- Safaricom -->
+    <div class="mno-card">
+      <div class="mno-header">
+        <div class="mno-logo" style="background:#00a651;color:#fff;">SAF</div>
+        <div>
+          <div class="mno-name">Safaricom</div>
+          <div class="mno-country">🇰🇪 Kenya</div>
+        </div>
+      </div>
+      <div class="mno-stats">
+        <div class="mno-stat"><div class="mno-stat-val" id="saf-calls">654</div><div class="mno-stat-lbl">API Calls</div></div>
+        <div class="mno-stat"><div class="mno-stat-val" id="saf-qos">487</div><div class="mno-stat-lbl">QoS Boosts</div></div>
+      </div>
+      <div class="mno-bar"><div class="mno-bar-fill" style="width:45%;background:linear-gradient(90deg,#00a651,#00cc66);"></div></div>
+      <div class="mno-revenue-lbl">Today's Revenue</div>
+      <div class="mno-revenue" id="saf-revenue">KES 65,400</div>
+    </div>
+  </div>
+
+  <!-- Revenue Chart + API Usage -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
+
+    <!-- Revenue Chart -->
+    <div class="panel">
+      <div class="panel-header">
+        <span>📈 Revenue This Week</span>
+        <span style="color:var(--accent);font-size:10px;font-family:'Space Mono',monospace;">ALL MNOs</span>
+      </div>
+      <div class="chart-container">
+        <div class="chart-bars" id="chart-bars"></div>
+      </div>
+    </div>
+
+    <!-- API Usage -->
+    <div class="panel">
+      <div class="panel-header">
+        <span>📡 CAMARA API Usage</span>
+        <span style="color:var(--accent2);font-size:10px;font-family:'Space Mono',monospace;">TODAY</span>
+      </div>
+      <table class="api-table">
+        <thead>
+          <tr>
+            <th>API</th>
+            <th>Calls</th>
+            <th>Revenue</th>
+            <th>Success</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="api-badge api-loc">📍 Location</span></td>
+            <td>2,888</td>
+            <td>RWF 57,760</td>
+            <td style="color:var(--accent)">94.2%</td>
+          </tr>
+          <tr>
+            <td><span class="api-badge api-dev">📶 Device Status</span></td>
+            <td>2,888</td>
+            <td>RWF 43,320</td>
+            <td style="color:var(--accent)">91.8%</td>
+          </tr>
+          <tr>
+            <td><span class="api-badge api-qos">🚀 QoS on Demand</span></td>
+            <td>2,080</td>
+            <td>RWF 83,200</td>
+            <td style="color:var(--accent)">88.5%</td>
+          </tr>
+          <tr>
+            <td><span class="api-badge api-sim">🔐 SIM Swap</span></td>
+            <td>2,888</td>
+            <td>RWF 28,880</td>
+            <td style="color:var(--accent)">99.1%</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- City Breakdown + Live Feed -->
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+
+    <!-- City Breakdown -->
+    <div class="panel">
+      <div class="panel-header">
+        <span>🌍 Revenue by City</span>
+        <span style="color:var(--accent2);font-size:10px;">TODAY</span>
+      </div>
+      <div class="city-row">
+        <span class="city-flag">🇷🇼</span>
+        <div class="city-info"><div class="city-name">Kigali</div><div class="city-ops">MTN + Airtel Rwanda</div></div>
+        <div class="city-bar"><div class="city-bar-fill" style="width:100%"></div></div>
+        <div class="city-revenue">RWF 89,400</div>
+      </div>
+      <div class="city-row">
+        <span class="city-flag">🇳🇬</span>
+        <div class="city-info"><div class="city-name">Lagos</div><div class="city-ops">MTN + Airtel Nigeria</div></div>
+        <div class="city-bar"><div class="city-bar-fill" style="width:85%"></div></div>
+        <div class="city-revenue">NGN 156,000</div>
+      </div>
+      <div class="city-row">
+        <span class="city-flag">🇰🇪</span>
+        <div class="city-info"><div class="city-name">Nairobi</div><div class="city-ops">Safaricom + Airtel Kenya</div></div>
+        <div class="city-bar"><div class="city-bar-fill" style="width:72%"></div></div>
+        <div class="city-revenue">KES 65,400</div>
+      </div>
+      <div class="city-row">
+        <span class="city-flag">🇺🇬</span>
+        <div class="city-info"><div class="city-name">Kampala</div><div class="city-ops">MTN + Airtel Uganda</div></div>
+        <div class="city-bar"><div class="city-bar-fill" style="width:58%"></div></div>
+        <div class="city-revenue">UGX 312,000</div>
+      </div>
+      <div class="city-row">
+        <span class="city-flag">🇬🇭</span>
+        <div class="city-info"><div class="city-name">Accra</div><div class="city-ops">MTN + Vodafone Ghana</div></div>
+        <div class="city-bar"><div class="city-bar-fill" style="width:44%"></div></div>
+        <div class="city-revenue">GHS 8,900</div>
+      </div>
+      <div class="city-row">
+        <span class="city-flag">🇹🇿</span>
+        <div class="city-info"><div class="city-name">Dar es Salaam</div><div class="city-ops">Vodacom + Airtel Tanzania</div></div>
+        <div class="city-bar"><div class="city-bar-fill" style="width:35%"></div></div>
+        <div class="city-revenue">TZS 234,000</div>
+      </div>
+    </div>
+
+    <!-- Live API Feed -->
+    <div class="panel">
+      <div class="panel-header">
+        <span>⚡ Live API Feed</span>
+        <span style="color:var(--accent);font-size:10px;font-family:'Space Mono',monospace;animation:pulse 2s infinite;">● LIVE</span>
+      </div>
+      <div class="live-feed" id="live-feed"></div>
+    </div>
+
+  </div>
+
+  <!-- Bottom nav -->
+  <div style="display:flex;gap:8px;margin-top:16px;">
+    <a href="index.html" style="flex:1;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:10px;text-align:center;color:var(--muted);text-decoration:none;font-size:12px;font-weight:700;">📊 Operator View</a>
+    <a href="passenger.html" style="flex:1;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:10px;text-align:center;color:var(--muted);text-decoration:none;font-size:12px;font-weight:700;">👤 Passenger View</a>
+    <a href="driver.html" style="flex:1;padding:12px;background:var(--surface);border:1px solid var(--border);border-radius:10px;text-align:center;color:var(--muted);text-decoration:none;font-size:12px;font-weight:700;">🛵 Driver View</a>
+  </div>
+
+</div>
+
+<script>
+  // Animate total stats
+  const totalRevenue = 288400;
+  const totalCalls = 10744;
+  const totalQoS = 2080;
+
+  function animateCount(el, target, prefix='', suffix='') {
+    let current = 0;
+    const step = target / 60;
+    const iv = setInterval(() => {
+      current = Math.min(current + step, target);
+      el.textContent = prefix + Math.floor(current).toLocaleString() + suffix;
+      if (current >= target) clearInterval(iv);
+    }, 30);
+  }
+
+  animateCount(document.getElementById('total-calls'), totalCalls);
+  animateCount(document.getElementById('qos-boosts'), totalQoS);
+  document.getElementById('total-revenue').textContent = 'RWF 288,400';
+  document.getElementById('revenue-change').textContent = '↑ +23% vs yesterday';
+
+  // Revenue chart
+  const weekData = [
+    { day: 'Mon', val: 180000 },
+    { day: 'Tue', val: 220000 },
+    { day: 'Wed', val: 195000 },
+    { day: 'Thu', val: 260000 },
+    { day: 'Fri', val: 310000 },
+    { day: 'Sat', val: 288400 },
+    { day: 'Sun', val: 0 },
+  ];
+  const maxVal = Math.max(...weekData.map(d => d.val));
+  const chartBars = document.getElementById('chart-bars');
+  weekData.forEach(d => {
+    const pct = d.val > 0 ? (d.val / maxVal) * 100 : 0;
+    chartBars.innerHTML += `
+      <div class="chart-bar-wrap">
+        <div class="chart-val">${d.val > 0 ? (d.val/1000).toFixed(0)+'K' : ''}</div>
+        <div class="chart-bar" style="height:${pct}%;${d.day==='Sat'?'opacity:1;':''}"></div>
+        <div class="chart-label">${d.day}</div>
+      </div>`;
+  });
+
+  // Live feed
+  const feedEvents = [
+    { icon:'🚀', title:'QoS Boost activated', sub:'Jean-Paul M. • Kigali • MTN Rwanda', amount:'+RWF 100', color:'rgba(0,229,160,0.1)' },
+    { icon:'📍', title:'Location API called', sub:'James K. • Nairobi • Safaricom', amount:'+KES 20', color:'rgba(0,153,255,0.1)' },
+    { icon:'🔐', title:'SIM Swap check passed', sub:'Emeka C. • Lagos • MTN Nigeria', amount:'+NGN 50', color:'rgba(255,107,53,0.1)' },
+    { icon:'📶', title:'Device Status verified', sub:'Moses K. • Kampala • MTN Uganda', amount:'+UGX 500', color:'rgba(0,229,160,0.1)' },
+    { icon:'🚀', title:'QoS Boost activated', sub:'Kwame A. • Accra • MTN Ghana', amount:'+GHS 2', color:'rgba(0,229,160,0.1)' },
+    { icon:'📍', title:'Location API called', sub:'Juma A. • Dar es Salaam • Vodacom', amount:'+TZS 200', color:'rgba(0,153,255,0.1)' },
+    { icon:'🔐', title:'SIM Swap detected ⚠️', sub:'David M. • Kigali • MTN Rwanda', amount:'BLOCKED', color:'rgba(255,51,102,0.1)' },
+    { icon:'📶', title:'Device Status checked', sub:'Faith W. • Nairobi • Airtel Kenya', amount:'+KES 15', color:'rgba(0,229,160,0.1)' },
+  ];
+
+  const feed = document.getElementById('live-feed');
+  let feedIdx = 0;
+
+  function addFeedItem() {
+    const e = feedEvents[feedIdx % feedEvents.length];
+    const ts = new Date().toLocaleTimeString('en-GB', {hour:'2-digit',minute:'2-digit',second:'2-digit'});
+    const item = document.createElement('div');
+    item.className = 'feed-item';
+    item.innerHTML = `
+      <div class="feed-icon" style="background:${e.color}">${e.icon}</div>
+      <div class="feed-info">
+        <div class="feed-title">${e.title}</div>
+        <div class="feed-sub">${ts} • ${e.sub}</div>
+      </div>
+      <div class="feed-amount" style="${e.amount==='BLOCKED'?'color:var(--danger)':''}">${e.amount}</div>`;
+    feed.insertBefore(item, feed.firstChild);
+    if (feed.children.length > 8) feed.removeChild(feed.lastChild);
+    feedIdx++;
+  }
+
+  // Add initial items
+  for (let i = 0; i < 5; i++) addFeedItem();
+
+  // Add new item every 3 seconds
+  setInterval(addFeedItem, 3000);
+
+  // Animate MNO stats
+  setTimeout(() => {
+    animateCount(document.getElementById('mtn-calls'), 1247);
+    animateCount(document.getElementById('mtn-qos'), 892);
+    animateCount(document.getElementById('airtel-calls'), 987);
+    animateCount(document.getElementById('airtel-qos'), 701);
+    animateCount(document.getElementById('saf-calls'), 654);
+    animateCount(document.getElementById('saf-qos'), 487);
+  }, 500);
+</script>
+</body>
+</html>
