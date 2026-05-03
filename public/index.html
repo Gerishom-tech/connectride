@@ -336,11 +336,11 @@
           <circle cx="130" cy="155" r="60" fill="url(#cg1)" opacity="0.5"/>
           <circle cx="530" cy="330" r="65" fill="url(#cg2)" opacity="0.6"/>
           <!-- Zone labels -->
-          <text x="310" y="185" fill="#00e5a0" opacity="0.5" font-family="monospace" font-size="9" text-anchor="middle">KICUKIRO ● HIGH COVERAGE</text>
-          <text x="155" y="310" fill="#ff6b35" opacity="0.5" font-family="monospace" font-size="9" text-anchor="middle">NYARUGENGE ● MEDIUM</text>
-          <text x="495" y="118" fill="#ff3366" opacity="0.5" font-family="monospace" font-size="9" text-anchor="middle">GASABO ● LOW COVERAGE</text>
-          <text x="130" y="135" fill="#00e5a0" opacity="0.4" font-family="monospace" font-size="8" text-anchor="middle">KIMIRONKO</text>
-          <text x="530" y="310" fill="#ff6b35" opacity="0.4" font-family="monospace" font-size="8" text-anchor="middle">NYAMIRAMBO</text>
+          <text id="zone1" x="310" y="185" fill="#00e5a0" opacity="0.5" font-family="monospace" font-size="9" text-anchor="middle">KICUKIRO ● HIGH COVERAGE</text>
+          <text id="zone2" x="155" y="310" fill="#ff6b35" opacity="0.5" font-family="monospace" font-size="9" text-anchor="middle">NYARUGENGE ● MEDIUM</text>
+          <text id="zone3" x="495" y="118" fill="#ff3366" opacity="0.5" font-family="monospace" font-size="9" text-anchor="middle">GASABO ● LOW COVERAGE</text>
+          <text id="zone4" x="130" y="135" fill="#00e5a0" opacity="0.4" font-family="monospace" font-size="8" text-anchor="middle">KIMIRONKO</text>
+          <text id="zone5" x="530" y="310" fill="#ff6b35" opacity="0.4" font-family="monospace" font-size="8" text-anchor="middle">NYAMIRAMBO</text>
           <!-- Dynamic -->
           <g id="driver-markers"></g>
           <path id="selected-path" stroke="#00e5a0" stroke-width="1.5" stroke-dasharray="6,4" fill="none" opacity="0"/>
@@ -747,6 +747,21 @@
       document.getElementById('pickup').value = cityPickups[city] || 'City Centre';
       document.getElementById('dropoff').value = cityDropoffs[city] || 'Downtown';
       document.getElementById('ride-price').textContent = cityCurrencies[city] || '—';
+
+      // Update map zone labels per city
+      const cityZoneLabels = {
+        'Kigali':        ['KICUKIRO ● HIGH','NYARUGENGE ● MEDIUM','GASABO ● LOW','KIMIRONKO','NYAMIRAMBO'],
+        'Nairobi':       ['WESTLANDS ● HIGH','KAREN ● MEDIUM','KIBERA ● LOW','PARKLANDS','EASTLEIGH'],
+        'Lagos':         ['VICTORIA ISLAND ● HIGH','SURULERE ● MEDIUM','MUSHIN ● LOW','LEKKI','YABA'],
+        'Kampala':       ['KOLOLO ● HIGH','MAKINDYE ● MEDIUM','KAWEMPE ● LOW','NAKASERO','KIREKA'],
+        'Accra':         ['EAST LEGON ● HIGH','MADINA ● MEDIUM','NIMA ● LOW','OSU','TEMA'],
+        'Dar es Salaam': ['MASAKI ● HIGH','ILALA ● MEDIUM','TEMEKE ● LOW','KINONDONI','MIKOCHENI'],
+      };
+      const zones = cityZoneLabels[city] || cityZoneLabels['Kigali'];
+      for (let i = 1; i <= 5; i++) {
+        const el = document.getElementById(`zone${i}`);
+        if (el && zones[i-1]) el.textContent = zones[i-1];
+      }
 
       const res = await fetch(`${API_BASE}/dispatch/drivers?city=${encodeURIComponent(city)}`);
       const data = await res.json();
