@@ -368,7 +368,7 @@
       <div class="panel">
         <div class="panel-header">
           <span>New Ride Request</span>
-          <span style="font-size:10px;color:var(--accent2)">Kigali, RW</span>
+          <span style="font-size:10px;color:var(--accent2)" id="ride-city-label">KIGALI, 🇷🇼</span>
         </div>
         <div class="ride-form">
           <div class="form-group">
@@ -380,7 +380,7 @@
             <input class="form-input" id="dropoff" value="Kigali Convention Centre" placeholder="Enter drop-off location"/>
           </div>
           <div style="display:flex;gap:12px;font-size:11px;color:var(--muted);font-family:'Space Mono',monospace;margin-bottom:12px;">
-            <span>4.2 km</span><span>~14 min</span><span>RWF 2,800</span>
+            <span>4.2 km</span><span>~14 min</span><span id="ride-price">RWF 2,800</span>
           </div>
           <button class="dispatch-btn" id="dispatch-btn" onclick="startDispatch()">
             ⚡ Run Network Check & Dispatch
@@ -718,9 +718,35 @@
       const city = getUserCity();
       const flag = cityFlags[city] || '🌍';
 
-      // Update map label
+      // City data
+      const cityPickups = {
+        'Kigali':'Kimironko Market','Nairobi':'Westlands Mall',
+        'Lagos':'Ikeja City Mall','Kampala':'Kololo Hill',
+        'Accra':'Osu Oxford Street','Dar es Salaam':'Masaki Peninsula'
+      };
+      const cityDropoffs = {
+        'Kigali':'Kigali Convention Centre','Nairobi':'Nairobi CBD',
+        'Lagos':'Victoria Island','Kampala':'Kampala City Centre',
+        'Accra':'Accra Mall','Dar es Salaam':'Dar es Salaam City Centre'
+      };
+      const cityCurrencies = {
+        'Kigali':'RWF 2,800','Nairobi':'KES 420',
+        'Lagos':'NGN 1,500','Kampala':'UGX 12,000',
+        'Accra':'GHS 35','Dar es Salaam':'TZS 8,000'
+      };
+      const cityLabelMap = {
+        'Kigali':'KIGALI 🇷🇼','Nairobi':'NAIROBI 🇰🇪',
+        'Lagos':'LAGOS 🇳🇬','Kampala':'KAMPALA 🇺🇬',
+        'Accra':'ACCRA 🇬🇭','Dar es Salaam':'DAR ES SALAAM 🇹🇿'
+      };
+
+      // Update all city-specific UI
       document.getElementById('map-city-label').textContent = `📍 ${city.toUpperCase()} NETWORK COVERAGE MAP — ${flag}`;
-      document.getElementById('city-label-header').textContent = `${city.toUpperCase()}, ${flag}`;
+      document.getElementById('city-label-header').textContent = `CAMARA APIs ACTIVE`;
+      document.getElementById('ride-city-label').textContent = cityLabelMap[city] || city.toUpperCase();
+      document.getElementById('pickup').value = cityPickups[city] || 'City Centre';
+      document.getElementById('dropoff').value = cityDropoffs[city] || 'Downtown';
+      document.getElementById('ride-price').textContent = cityCurrencies[city] || '—';
 
       const res = await fetch(`${API_BASE}/dispatch/drivers?city=${encodeURIComponent(city)}`);
       const data = await res.json();
