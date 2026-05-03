@@ -303,8 +303,8 @@
     <!-- Map -->
     <div class="map-panel">
       <div class="panel-header">
-        <span>📍 Kigali Network Coverage Map — Rwanda</span>
-        <span style="font-size:10px;color:var(--accent);font-family:'Space Mono',monospace">CAMARA APIs ACTIVE</span>
+        <span id="map-city-label">📍 KIGALI NETWORK COVERAGE MAP — 🇷🇼</span>
+        <span style="font-size:10px;color:var(--accent);font-family:'Space Mono',monospace" id="city-label-header">CAMARA APIs ACTIVE</span>
       </div>
       <div class="map-canvas">
         <svg class="map-svg" viewBox="0 0 620 450" id="map-svg" xmlns="http://www.w3.org/2000/svg">
@@ -609,23 +609,41 @@
     renderMarkers(null);
   }
 
+  // Get user city helper
+  function getUserCity() {
+    const user = JSON.parse(localStorage.getItem('cr_user') || '{}');
+    if (!user.city) return 'Kigali';
+    return user.city
+      .replace(' 🇷🇼','').replace(' 🇰🇪','').replace(' 🇳🇬','')
+      .replace(' 🇺🇬','').replace(' 🇬🇭','').replace(' 🇹🇿','').trim();
+  }
+
+  // City flags
+  const cityFlags = {
+    'Kigali':'🇷🇼','Nairobi':'🇰🇪','Lagos':'🇳🇬',
+    'Kampala':'🇺🇬','Accra':'🇬🇭','Dar es Salaam':'🇹🇿'
+  };
+
   async function startDispatch() {
     if (dispatching) return;
     dispatching = true;
     lastResults = null;
+    const city = getUserCity();
+    const flag = cityFlags[city] || '🌍';
+
     document.getElementById('dispatch-btn').disabled = true;
-    document.getElementById('dispatch-btn').textContent = '⏳ Checking network conditions...';
+    document.getElementById('dispatch-btn').textContent = `⏳ Checking ${city} drivers...`;
     document.getElementById('assigned-card').classList.remove('show');
     document.getElementById('selected-path').setAttribute('opacity','0');
     document.getElementById('passenger-marker').setAttribute('opacity','1');
-    document.getElementById('ai-thinking').textContent = 'Analyzing Kigali network zones...\nRunning CAMARA API checks on all drivers...\nCalculating dispatch readiness scores...';
+    document.getElementById('ai-thinking').textContent = `Analyzing ${city} network zones...\nRunning CAMARA API checks on all drivers...\nCalculating dispatch readiness scores...`;
     document.getElementById('ai-decision').classList.remove('show');
 
     const pickup = document.getElementById('pickup').value;
     const dropoff = document.getElementById('dropoff').value;
 
     addLog('━━━ NEW DISPATCH REQUEST ━━━', 'info');
-    addLog(`🗺️ ${pickup} → ${dropoff}`, 'info');
+    addLog(`🗺️ ${city} ${flag}: ${pickup} → ${dropoff}`, 'info');
     addLog('🔍 Connecting to ConnectRide API...', 'info');
 
     let prog = 0;
@@ -638,7 +656,7 @@
       const res = await fetch(`${API_BASE}/dispatch/check`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ pickup, dropoff })
+        body: JSON.stringify({ pickup, dropoff, city })
       });
       const data = await res.json();
       clearInterval(iv);
@@ -647,7 +665,7 @@
       lastResults = data.allResults;
 
       addLog(`✅ API response received`, 'ok');
-      addLog(`👥 ${data.totalDriversChecked} drivers checked`, 'info');
+      addLog(`👥 ${data.totalDriversChecked} drivers checked in ${city}`, 'info');
       addLog(`🟢 ${data.eligibleDrivers} drivers eligible`, 'ok');
 
       data.allResults.forEach(r => {
@@ -663,7 +681,7 @@
       const bestScore = Math.max(...data.allResults.map(r=>r.score));
       document.getElementById('stat-score').textContent = bestScore;
 
-      document.getElementById('ai-thinking').textContent = `Analyzed ${data.totalDriversChecked} drivers across Kigali zones.\n${data.eligibleDrivers} passed all 4 CAMARA API checks.\nBest dispatch score: ${bestScore}/100`;
+      document.getElementById('ai-thinking').textContent = `Analyzed ${data.totalDriversChecked} drivers across ${city} zones.\n${data.eligibleDrivers} passed all 4 CAMARA API checks.\nBest dispatch score: ${bestScore}/100`;
 
       if (data.assigned) {
         const best = data.assigned;
@@ -697,7 +715,14 @@
   // Load drivers on start
   async function loadDrivers() {
     try {
-      const res = await fetch(`${API_BASE}/dispatch/drivers`);
+      const city = getUserCity();
+      const flag = cityFlags[city] || '🌍';
+
+      // Update map label
+      document.getElementById('map-city-label').textContent = `📍 ${city.toUpperCase()} NETWORK COVERAGE MAP — ${flag}`;
+      document.getElementById('city-label-header').textContent = `${city.toUpperCase()}, ${flag}`;
+
+      const res = await fetch(`${API_BASE}/dispatch/drivers?city=${encodeURIComponent(city)}`);
       const data = await res.json();
       allDrivers = data.drivers;
       document.getElementById('hdr-drivers').textContent = data.total;
@@ -705,7 +730,7 @@
       renderMarkers(null);
       addLog('🟢 ConnectRide backend connected', 'ok');
       addLog(`📡 Nokia NaC CAMARA APIs ready`, 'ok');
-      addLog(`🗺️ Kigali: ${data.total} drivers loaded`, 'info');
+      addLog(`🗺️ ${city} ${flag}: ${data.total} drivers loaded`, 'info');
       addLog('⏳ Awaiting dispatch request...', 'info');
     } catch(err) {
       addLog('❌ Cannot connect to backend server', 'err');
