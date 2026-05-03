@@ -27,13 +27,8 @@
   .orb2 { width: 300px; height: 300px; background: rgba(0,153,255,0.08); bottom: -50px; right: -50px; animation-delay: -4s; }
   @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-30px)} }
   .container { position: relative; z-index: 1; width: 100%; max-width: 480px; padding: 20px 20px 80px; }
-  .logo-section { text-align: center; margin-bottom: 32px; animation: fadeInDown 0.8s ease; }
-  @keyframes fadeInDown { from{opacity:0;transform:translateY(-30px)} to{opacity:1;transform:translateY(0)} }
-  .logo-icon-big {
-    width: 80px; height: 80px; background: linear-gradient(135deg, var(--accent), var(--accent2));
-    border-radius: 20px; display: flex; align-items: center; justify-content: center;
-    font-size: 40px; margin: 0 auto 16px; animation: glow 3s ease-in-out infinite;
-  }
+  .logo-section { text-align: center; margin-bottom: 32px; }
+  .logo-icon-big { width: 80px; height: 80px; background: linear-gradient(135deg, var(--accent), var(--accent2)); border-radius: 20px; display: flex; align-items: center; justify-content: center; font-size: 40px; margin: 0 auto 16px; animation: glow 3s ease-in-out infinite; }
   @keyframes glow { 0%,100%{box-shadow:0 0 40px rgba(0,229,160,0.3)} 50%{box-shadow:0 0 60px rgba(0,229,160,0.5)} }
   .logo-name { font-size: 36px; font-weight: 800; letter-spacing: -1px; margin-bottom: 6px; }
   .logo-name span { color: var(--accent); }
@@ -58,7 +53,7 @@
   .login-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,229,160,0.4); }
   .demo-section { margin-top: 20px; padding-top: 20px; border-top: 1px solid var(--border); }
   .demo-title { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; text-align: center; }
-  .demo-accounts { display: flex; flex-direction: column; gap: 8px; }
+  .demo-accounts { display: flex; flex-direction: column; gap: 8px; max-height: 300px; overflow-y: auto; }
   .demo-account { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: all 0.2s; }
   .demo-account:hover { border-color: var(--accent); background: rgba(0,229,160,0.05); }
   .demo-account-info { display: flex; align-items: center; gap: 10px; }
@@ -79,6 +74,7 @@
   .success-msg.show { display: block; }
   .divider { display: flex; align-items: center; gap: 12px; margin: 16px 0; color: var(--muted); font-size: 12px; }
   .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .city-section-title { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; padding: 6px 0 4px; font-weight: 700; }
 </style>
 </head>
 <body>
@@ -128,20 +124,53 @@
     <div class="error-msg" id="error-msg">❌ Invalid credentials.</div>
     <button class="login-btn" onclick="handleLogin()">🚀 Login to ConnectRide</button>
     <div class="demo-section">
-      <div class="demo-title">Quick Demo Access</div>
+      <div class="demo-title">Quick Demo Access — All 6 Cities</div>
       <div class="demo-accounts">
-        <div class="demo-account" onclick="quickLogin('passenger@connectride.com','demo123','passenger')">
-          <div class="demo-account-info"><span class="demo-account-emoji">👤</span><div><div class="demo-account-name">Amina Uwase</div><div class="demo-account-role">Passenger — Kigali</div></div></div>
+
+        <div class="city-section-title">🇷🇼 Kigali, Rwanda</div>
+        <div class="demo-account" onclick="quickLogin('passenger@connectride.com','demo123','passenger','Kigali')">
+          <div class="demo-account-info"><span class="demo-account-emoji">👤</span><div><div class="demo-account-name">Amina Uwase</div><div class="demo-account-role">Passenger — Kigali 🇷🇼</div></div></div>
           <button class="demo-use-btn">USE →</button>
         </div>
-        <div class="demo-account" onclick="quickLogin('driver@connectride.com','demo123','driver')">
-          <div class="demo-account-info"><span class="demo-account-emoji">🛵</span><div><div class="demo-account-name">Jean-Paul M.</div><div class="demo-account-role">Driver — Kicukiro • MTN</div></div></div>
+        <div class="demo-account" onclick="quickLogin('driver@connectride.com','demo123','driver','Kigali')">
+          <div class="demo-account-info"><span class="demo-account-emoji">🛵</span><div><div class="demo-account-name">Jean-Paul M.</div><div class="demo-account-role">Driver — Kicukiro • MTN Rwanda</div></div></div>
           <button class="demo-use-btn">USE →</button>
         </div>
-        <div class="demo-account" onclick="quickLogin('operator@connectride.com','demo123','operator')">
-          <div class="demo-account-info"><span class="demo-account-emoji">📊</span><div><div class="demo-account-name">Gerishom</div><div class="demo-account-role">Operator — ConnectRide</div></div></div>
+        <div class="demo-account" onclick="quickLogin('operator@connectride.com','demo123','operator','Kigali')">
+          <div class="demo-account-info"><span class="demo-account-emoji">📊</span><div><div class="demo-account-name">Gerishom</div><div class="demo-account-role">Operator — Kigali 🇷🇼</div></div></div>
           <button class="demo-use-btn">USE →</button>
         </div>
+
+        <div class="city-section-title">🇰🇪 Nairobi, Kenya</div>
+        <div class="demo-account" onclick="quickLogin('nairobi@connectride.com','demo123','operator','Nairobi')">
+          <div class="demo-account-info"><span class="demo-account-emoji">📊</span><div><div class="demo-account-name">James K.</div><div class="demo-account-role">Operator — Nairobi 🇰🇪 • Safaricom</div></div></div>
+          <button class="demo-use-btn">USE →</button>
+        </div>
+
+        <div class="city-section-title">🇳🇬 Lagos, Nigeria</div>
+        <div class="demo-account" onclick="quickLogin('lagos@connectride.com','demo123','operator','Lagos')">
+          <div class="demo-account-info"><span class="demo-account-emoji">📊</span><div><div class="demo-account-name">Emeka C.</div><div class="demo-account-role">Operator — Lagos 🇳🇬 • MTN Nigeria</div></div></div>
+          <button class="demo-use-btn">USE →</button>
+        </div>
+
+        <div class="city-section-title">🇺🇬 Kampala, Uganda</div>
+        <div class="demo-account" onclick="quickLogin('kampala@connectride.com','demo123','operator','Kampala')">
+          <div class="demo-account-info"><span class="demo-account-emoji">📊</span><div><div class="demo-account-name">Moses K.</div><div class="demo-account-role">Operator — Kampala 🇺🇬 • MTN Uganda</div></div></div>
+          <button class="demo-use-btn">USE →</button>
+        </div>
+
+        <div class="city-section-title">🇬🇭 Accra, Ghana</div>
+        <div class="demo-account" onclick="quickLogin('accra@connectride.com','demo123','operator','Accra')">
+          <div class="demo-account-info"><span class="demo-account-emoji">📊</span><div><div class="demo-account-name">Kwame A.</div><div class="demo-account-role">Operator — Accra 🇬🇭 • MTN Ghana</div></div></div>
+          <button class="demo-use-btn">USE →</button>
+        </div>
+
+        <div class="city-section-title">🇹🇿 Dar es Salaam, Tanzania</div>
+        <div class="demo-account" onclick="quickLogin('darsalaam@connectride.com','demo123','operator','Dar es Salaam')">
+          <div class="demo-account-info"><span class="demo-account-emoji">📊</span><div><div class="demo-account-name">Juma A.</div><div class="demo-account-role">Operator — Dar es Salaam 🇹🇿 • Vodacom</div></div></div>
+          <button class="demo-use-btn">USE →</button>
+        </div>
+
       </div>
     </div>
   </div>
@@ -170,7 +199,7 @@
     </div>
     <div class="form-group">
       <label class="form-label">📍 City</label>
-      <select class="form-input" id="reg-city" style="cursor:pointer;appearance:auto;">
+      <select class="form-input" id="reg-city" style="cursor:pointer;appearance:auto;background:#1a2235;color:#e8edf5;">
         <option value="Kigali">Kigali 🇷🇼</option>
         <option value="Nairobi">Nairobi 🇰🇪</option>
         <option value="Lagos">Lagos 🇳🇬</option>
@@ -197,6 +226,18 @@
   let selectedRole = 'operator';
   let selectedRegRole = 'operator';
 
+  // All demo accounts with cities
+  const demos = {
+    'passenger@connectride.com': {password:'demo123', role:'passenger', name:'Amina Uwase', city:'Kigali'},
+    'driver@connectride.com': {password:'demo123', role:'driver', name:'Jean-Paul M.', city:'Kigali'},
+    'operator@connectride.com': {password:'demo123', role:'operator', name:'Gerishom', city:'Kigali'},
+    'nairobi@connectride.com': {password:'demo123', role:'operator', name:'James K.', city:'Nairobi'},
+    'lagos@connectride.com': {password:'demo123', role:'operator', name:'Emeka C.', city:'Lagos'},
+    'kampala@connectride.com': {password:'demo123', role:'operator', name:'Moses K.', city:'Kampala'},
+    'accra@connectride.com': {password:'demo123', role:'operator', name:'Kwame A.', city:'Accra'},
+    'darsalaam@connectride.com': {password:'demo123', role:'operator', name:'Juma A.', city:'Dar es Salaam'},
+  };
+
   function selectRole(role) {
     selectedRole = role;
     document.querySelectorAll('#login-card .role-btn').forEach(b => b.classList.remove('active'));
@@ -219,10 +260,16 @@
     window.scrollTo({top:0,behavior:'smooth'});
   }
 
-  function quickLogin(email, password, role) {
+  function quickLogin(email, password, role, city) {
     document.getElementById('email').value = email;
     document.getElementById('password').value = password;
     selectRole(role);
+    // Pre-set city for this login
+    if (city) {
+      const demo = demos[email] || {};
+      demo.city = city;
+      demos[email] = demo;
+    }
     setTimeout(() => handleLogin(), 300);
   }
 
@@ -244,7 +291,7 @@
       return;
     }
 
-    // Check registered users
+    // Check registered users first
     const users = JSON.parse(localStorage.getItem('cr_users') || '{}');
     if (users[email] && users[email].password === password) {
       localStorage.setItem('cr_user', JSON.stringify(users[email]));
@@ -252,16 +299,11 @@
       return;
     }
 
-    // Demo accounts
-    const demos = {
-      'passenger@connectride.com': {password:'demo123', role:'passenger', name:'Amina Uwase'},
-      'driver@connectride.com': {password:'demo123', role:'driver', name:'Jean-Paul M.'},
-      'operator@connectride.com': {password:'demo123', role:'operator', name:'Gerishom'},
-    };
-
+    // Check demo accounts
     const demo = demos[email];
     if (demo && demo.password === password) {
-      localStorage.setItem('cr_user', JSON.stringify({email, name:demo.name, role:selectedRole||demo.role}));
+      const userObj = {email, name:demo.name, role:selectedRole||demo.role, city:demo.city||'Kigali'};
+      localStorage.setItem('cr_user', JSON.stringify(userObj));
       redirect(selectedRole || demo.role);
     } else {
       errorMsg.textContent = '❌ Invalid credentials. Use demo accounts below.';
